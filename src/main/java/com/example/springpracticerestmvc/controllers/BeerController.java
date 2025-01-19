@@ -16,6 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/beer")
+@SuppressWarnings("rawtypes")
 public class BeerController {
 
     private final BeerService beerService;
@@ -31,6 +32,7 @@ public class BeerController {
         return beerService.getBeerById(beerId);
     }
 
+    @SuppressWarnings("unchecked")
     @PostMapping
     public ResponseEntity handlePost(@RequestBody Beer beer) {
         var savedBeer = beerService.saveNewBeer(beer);

@@ -14,6 +14,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/customer")
 @RequiredArgsConstructor
+@SuppressWarnings("rawtypes")
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -28,6 +29,7 @@ public class CustomerController {
         return customerService.getCustomerById(id);
     }
 
+    @SuppressWarnings("unchecked")
     @PostMapping
     public ResponseEntity handlePost(@RequestBody Customer customer) {
         Customer savedCustomer = customerService.saveNewCustomer(customer);

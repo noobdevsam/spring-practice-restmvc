@@ -1,8 +1,5 @@
 package com.example.springpracticerestmvc.model;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;

@@ -11,7 +11,7 @@ import java.util.*;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-    private Map<UUID, Customer> customerMap;
+    private final Map<UUID, Customer> customerMap;
 
     public CustomerServiceImpl() {
         var cst1 = new Customer(
@@ -80,7 +80,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void pathCustomerById(UUID customerId, Customer customer) {
+    public void patchCustomerById(UUID customerId, Customer customer) {
         var existingCustomer = customerMap.get(customerId);
 
         if (StringUtils.hasText(customer.getName())) {

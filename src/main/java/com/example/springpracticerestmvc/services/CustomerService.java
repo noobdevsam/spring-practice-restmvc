@@ -16,5 +16,5 @@ public interface CustomerService {
 
     void deleteCustomerById(UUID customerId);
 
-    void pathCustomerById(UUID customerId, Customer customer);
+    void patchCustomerById(UUID customerId, Customer customer);
 }

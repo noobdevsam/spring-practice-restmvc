@@ -1,24 +1,25 @@
 package com.example.springpracticerestmvc.controllers;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.http.MediaType;
-
-import static org.hamcrest.core.Is.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import com.example.springpracticerestmvc.model.Beer;
 import com.example.springpracticerestmvc.services.BeerService;
 import com.example.springpracticerestmvc.services.impl.BeerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.UUID;
+
+import static org.hamcrest.core.Is.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @WebMvcTest(BeerController.class)
@@ -44,7 +45,7 @@ class BeerControllerTest {
     @Test
     void getBeerById() throws Exception {
 
-        var beer = beerServiceImpl.listBeers().get(0);
+        var beer = beerServiceImpl.listBeers().getFirst();
 
         //given(beerService.getBeerById(any(UUID.class))).willReturn(beer);
         given(beerService.getBeerById(beer.getId())).willReturn(beer);
@@ -72,7 +73,7 @@ class BeerControllerTest {
 
     @Test
     void test_create_new_beer() throws Exception {
-        var beer = beerServiceImpl.listBeers().get(0);
+        var beer = beerServiceImpl.listBeers().getFirst();
         beer.setId(null);
         beer.setVersion(null);
 
@@ -90,7 +91,20 @@ class BeerControllerTest {
         // writing to json
         //System.out.println(objectMapper.writeValueAsString(beer));
 
+    }
 
+    @Test
+    void test_update_beer() throws Exception {
+        var beer = beerServiceImpl.listBeers().getFirst();
+
+        mockMvc.perform(
+                put("/api/v1/beer/" + beer.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(beer))
+        ).andExpect(status().isNoContent());
+
+        verify(beerService).updateBeerById(any(UUID.class), any(Beer.class));
     }
 
 }

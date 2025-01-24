@@ -2,8 +2,7 @@ package com.example.springpracticerestmvc.controllers;
 
 import com.example.springpracticerestmvc.model.Beer;
 import com.example.springpracticerestmvc.services.BeerService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,14 +11,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@Slf4j
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/beer")
 @SuppressWarnings("rawtypes")
 public class BeerController {
 
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(BeerController.class);
     private final BeerService beerService;
+
+    public BeerController(BeerService beerService) {
+        this.beerService = beerService;
+    }
 
     @GetMapping
     public List<Beer> listBeers() {
@@ -38,7 +40,7 @@ public class BeerController {
     public ResponseEntity handlePost(@RequestBody Beer beer) {
         var savedBeer = beerService.saveNewBeer(beer);
 
-        var headers= new HttpHeaders();
+        var headers = new HttpHeaders();
         headers.add("Location", "/api/v1/beer/" + savedBeer.getId().toString());
 
         return new ResponseEntity(headers, HttpStatus.CREATED);
@@ -61,5 +63,5 @@ public class BeerController {
         beerService.patchBeerById(beerId, beer);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-    
+
 }

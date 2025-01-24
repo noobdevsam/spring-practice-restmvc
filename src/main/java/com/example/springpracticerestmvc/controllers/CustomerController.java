@@ -2,7 +2,6 @@ package com.example.springpracticerestmvc.controllers;
 
 import com.example.springpracticerestmvc.model.Customer;
 import com.example.springpracticerestmvc.services.CustomerService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +12,14 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/customer")
-@RequiredArgsConstructor
 @SuppressWarnings("rawtypes")
 public class CustomerController {
 
     private final CustomerService customerService;
+
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
     @GetMapping
     public List<Customer> listAllCustomers() {
@@ -25,7 +27,7 @@ public class CustomerController {
     }
 
     @GetMapping("{customerId}")
-    public Customer getCustomerById(@PathVariable("customerId")UUID id) {
+    public Customer getCustomerById(@PathVariable("customerId") UUID id) {
         return customerService.getCustomerById(id);
     }
 
@@ -53,7 +55,7 @@ public class CustomerController {
     }
 
     @PatchMapping("customerId")
-    public ResponseEntity patchCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer)  {
+    public ResponseEntity patchCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer) {
         customerService.pathCustomerById(customerId, customer);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

@@ -14,29 +14,29 @@ public class CustomerServiceImpl implements CustomerService {
     private Map<UUID, Customer> customerMap;
 
     public CustomerServiceImpl() {
-        var cst1 = Customer.builder()
-                .id(UUID.randomUUID())
-                .name("Customer 1")
-                .version(1)
-                .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
-                .build();
+        var cst1 = new Customer(
+                UUID.randomUUID(),
+                "Customer 1",
+                1,
+                LocalDateTime.now(),
+                LocalDateTime.now()
+                );
 
-        var cst2 = Customer.builder()
-                .id(UUID.randomUUID())
-                .name("Customer 2")
-                .version(1)
-                .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
-                .build();
+        var cst2 = new Customer(
+                UUID.randomUUID(),
+                "Customer 2",
+                1,
+                LocalDateTime.now(),
+                LocalDateTime.now()
+                );
 
-        var cst3 = Customer.builder()
-                .id(UUID.randomUUID())
-                .name("Customer 3")
-                .version(1)
-                .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
-                .build();
+        var cst3 = new Customer(
+                UUID.randomUUID(),
+                "Customer 3",
+                1,
+                LocalDateTime.now(),
+                LocalDateTime.now()
+                );
 
         customerMap = new HashMap<>();
         customerMap.put(cst1.getId(), cst1);
@@ -56,13 +56,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer saveNewCustomer(Customer customer) {
-        var savedCustomer = Customer.builder()
-                .id(UUID.randomUUID())
-                .version(1)
-                .name(customer.getName())
-                .updateDate(LocalDateTime.now())
-                .createdDate(LocalDateTime.now())
-                .build();
+        var savedCustomer = new Customer(
+                UUID.randomUUID(),
+                customer.getName(),
+                1,
+                LocalDateTime.now(),
+                LocalDateTime.now()
+                );
 
         customerMap.put(savedCustomer.getId(), savedCustomer);
         return savedCustomer;
@@ -88,17 +88,3 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

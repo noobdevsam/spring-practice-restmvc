@@ -59,7 +59,7 @@ public class CustomerControllerTest {
         given(customerService.getCustomerById(customer.getId())).willReturn(customer);
 
         mockMvc.perform(
-            get("/api/v1/customer/" + customer.getId()).accept(MediaType.APPLICATION_JSON)
+                        get(CustomerController.CUSTOMER_PATH + "/" + customer.getId()).accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.name", is(customer.getName())));
@@ -70,7 +70,7 @@ public class CustomerControllerTest {
         given(customerService.getAllCustomers()).willReturn(customerServiceImpl.getAllCustomers());
 
         mockMvc.perform(
-            get("/api/v1/customer").accept(MediaType.APPLICATION_JSON)
+                        get(CustomerController.CUSTOMER_PATH).accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.length()", is(3)));
@@ -86,7 +86,7 @@ public class CustomerControllerTest {
                 .willReturn(customerServiceImpl.getAllCustomers().get(1));
 
         mockMvc.perform(
-                        post("/api/v1/customer")
+                        post(CustomerController.CUSTOMER_PATH)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(customer))
@@ -100,7 +100,7 @@ public class CustomerControllerTest {
         var customer = customerServiceImpl.getAllCustomers().getFirst();
 
         mockMvc.perform(
-                put("/api/v1/customer/" + customer.getId())
+                put(CustomerController.CUSTOMER_PATH + "/" + customer.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customer))
@@ -117,7 +117,7 @@ public class CustomerControllerTest {
         var customer = customerServiceImpl.getAllCustomers().getFirst();
 
         mockMvc.perform(
-                delete("/api/v1/customer/" + customer.getId())
+                delete(CustomerController.CUSTOMER_PATH + "/" + customer.getId())
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNoContent());
 
@@ -134,7 +134,7 @@ public class CustomerControllerTest {
         customerMap.put("name", "New Name");
 
         mockMvc.perform(
-                patch("/api/v1/customer/" + customer.getId())
+                patch(CustomerController.CUSTOMER_PATH + "/" + customer.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customerMap))
         ).andExpect(status().isNoContent());

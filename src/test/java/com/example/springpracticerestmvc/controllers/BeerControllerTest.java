@@ -63,7 +63,7 @@ class BeerControllerTest {
 
         // using json path matcher to access json object
         // such as $.id or $.beerName
-        mockMvc.perform(get(BeerController.BEER_PATH + "/" + beer.getId())
+        mockMvc.perform(get(BeerController.BEER_PATH_ID, beer.getId())
                     .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -109,7 +109,7 @@ class BeerControllerTest {
         var beer = beerServiceImpl.listBeers().getFirst();
 
         mockMvc.perform(
-                put(BeerController.BEER_PATH + "/" + beer.getId())
+                put(BeerController.BEER_PATH_ID, beer.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beer))
@@ -123,7 +123,7 @@ class BeerControllerTest {
         var beer = beerServiceImpl.listBeers().getFirst();
 
         mockMvc.perform(
-                delete(BeerController.BEER_PATH + "/" + beer.getId())
+                delete(BeerController.BEER_PATH_ID, beer.getId())
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNoContent());
 
@@ -140,7 +140,7 @@ class BeerControllerTest {
         beerMap.put("beerName", "New Name");
 
         mockMvc.perform(
-                patch(BeerController.BEER_PATH + "/" + beer.getId())
+                patch(BeerController.BEER_PATH_ID, beer.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerMap))

@@ -66,10 +66,4 @@ public class BeerController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity handleNotFoundException() {
-        log.debug("inside not-found-exception-handler");
-        return ResponseEntity.notFound().build();
-    }
-
 }

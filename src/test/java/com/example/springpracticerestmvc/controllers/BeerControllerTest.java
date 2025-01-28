@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,7 +61,9 @@ class BeerControllerTest {
         var beer = beerServiceImpl.listBeers().getFirst();
 
         //given(beerService.getBeerById(any(UUID.class))).willReturn(beer);
-        given(beerService.getBeerById(beer.getId())).willReturn(beer);
+        given(beerService.getBeerById(beer.getId())).willReturn(
+                Optional.of(beer)
+        );
 
         // using json path matcher to access json object
         // such as $.id or $.beerName
@@ -155,7 +158,7 @@ class BeerControllerTest {
     @Test
     void test_getbeerbyid_not_found() throws Exception {
         given(beerService.getBeerById(any(UUID.class)))
-                .willThrow(NotFoundException.class);
+                .willReturn(Optional.empty());
         mockMvc.perform(
                 get(BeerController.BEER_PATH_ID, UUID.randomUUID())
         ).andExpect(status().isNotFound());

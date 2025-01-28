@@ -3,12 +3,13 @@ package com.example.springpracticerestmvc.services;
 import com.example.springpracticerestmvc.model.Beer;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface BeerService {
     List<Beer> listBeers();
 
-    Beer getBeerById(UUID beerId);
+    Optional<Beer> getBeerById(UUID beerId);
 
     Beer saveNewBeer(Beer beer);
 

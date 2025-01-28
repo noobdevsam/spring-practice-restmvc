@@ -1,5 +1,6 @@
 package com.example.springpracticerestmvc.controllers;
 
+import com.example.springpracticerestmvc.exceptions.NotFoundException;
 import com.example.springpracticerestmvc.model.Customer;
 import com.example.springpracticerestmvc.services.CustomerService;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +30,8 @@ public class CustomerController {
 
     @GetMapping(CUSTOMER_PATH_ID)
     public Customer getCustomerById(@PathVariable("customerId") UUID id) {
-        return customerService.getCustomerById(id);
+        return customerService.getCustomerById(id)
+                .orElseThrow(NotFoundException::new);
     }
 
     @SuppressWarnings("unchecked")

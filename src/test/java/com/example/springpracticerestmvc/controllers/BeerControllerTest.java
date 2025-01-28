@@ -1,5 +1,6 @@
 package com.example.springpracticerestmvc.controllers;
 
+import com.example.springpracticerestmvc.exceptions.NotFoundException;
 import com.example.springpracticerestmvc.model.Beer;
 import com.example.springpracticerestmvc.services.BeerService;
 import com.example.springpracticerestmvc.services.impl.BeerServiceImpl;
@@ -149,6 +150,15 @@ class BeerControllerTest {
         verify(beerService).patchBeerById(uuidArgumentCaptor.capture(), beerArgumentCaptor.capture());
         assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
         assertThat(beerMap.get("beerName")).isEqualTo(beerArgumentCaptor.getValue().getBeerName());
+    }
+
+    @Test
+    void test_getbeerbyid_not_found() throws Exception {
+        given(beerService.getBeerById(any(UUID.class)))
+                .willThrow(NotFoundException.class);
+        mockMvc.perform(
+                get(BeerController.BEER_PATH_ID, UUID.randomUUID())
+        ).andExpect(status().isNotFound());
     }
 
 }

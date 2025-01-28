@@ -1,5 +1,6 @@
 package com.example.springpracticerestmvc.controllers;
 
+import com.example.springpracticerestmvc.exceptions.NotFoundException;
 import com.example.springpracticerestmvc.model.Beer;
 import com.example.springpracticerestmvc.services.BeerService;
 import org.slf4j.Logger;
@@ -63,6 +64,12 @@ public class BeerController {
     public ResponseEntity patchBeerById(@PathVariable("beerId") UUID beerId, @RequestBody Beer beer) {
         beerService.patchBeerById(beerId, beer);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity handleNotFoundException() {
+        log.debug("inside not-found-exception-handler");
+        return ResponseEntity.notFound().build();
     }
 
 }

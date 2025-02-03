@@ -1,7 +1,6 @@
 package com.example.springpracticerestmvc.controllers;
 
-import com.example.springpracticerestmvc.exceptions.NotFoundException;
-import com.example.springpracticerestmvc.model.Beer;
+import com.example.springpracticerestmvc.model.BeerDTO;
 import com.example.springpracticerestmvc.services.BeerService;
 import com.example.springpracticerestmvc.services.impl.BeerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,7 +47,7 @@ class BeerControllerTest {
     ArgumentCaptor<UUID> uuidArgumentCaptor;
 
     @Captor
-    ArgumentCaptor<Beer> beerArgumentCaptor;
+    ArgumentCaptor<BeerDTO> beerArgumentCaptor;
 
     @BeforeEach
     void setUp() {
@@ -92,7 +91,7 @@ class BeerControllerTest {
         beer.setId(null);
         beer.setVersion(null);
 
-        given(beerService.saveNewBeer(any(Beer.class)))
+        given(beerService.saveNewBeer(any(BeerDTO.class)))
             .willReturn(beerServiceImpl.listBeers().get(1));
 
         mockMvc.perform(
@@ -119,7 +118,7 @@ class BeerControllerTest {
                         .content(objectMapper.writeValueAsString(beer))
         ).andExpect(status().isNoContent());
 
-        verify(beerService).updateBeerById(any(UUID.class), any(Beer.class));
+        verify(beerService).updateBeerById(any(UUID.class), any(BeerDTO.class));
     }
 
     @Test

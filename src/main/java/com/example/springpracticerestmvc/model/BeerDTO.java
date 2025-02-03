@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 
-public class Beer {
+public class BeerDTO {
     private UUID id;
     private Integer version;
     private String beerName;
@@ -17,15 +17,15 @@ public class Beer {
     private LocalDateTime createdDate;
     private LocalDateTime updateDate;
 
-    public Beer(UUID id,
-                Integer version,
-                String beerName,
-                BeerStyle beerStyle,
-                String upc,
-                BigDecimal price,
-                Integer quantityOnHand,
-                LocalDateTime createdDate,
-                LocalDateTime updateDate) {
+    public BeerDTO(UUID id,
+                   Integer version,
+                   String beerName,
+                   BeerStyle beerStyle,
+                   String upc,
+                   BigDecimal price,
+                   Integer quantityOnHand,
+                   LocalDateTime createdDate,
+                   LocalDateTime updateDate) {
         this.id = id;
         this.version = version;
         this.beerName = beerName;
@@ -39,9 +39,9 @@ public class Beer {
 
     @Override
     public final boolean equals(Object o) {
-        if (!(o instanceof Beer beer)) return false;
+        if (!(o instanceof BeerDTO beerDTO)) return false;
 
-        return Objects.equals(getId(), beer.getId()) && Objects.equals(getVersion(), beer.getVersion()) && Objects.equals(getBeerName(), beer.getBeerName()) && getBeerStyle() == beer.getBeerStyle() && Objects.equals(getUpc(), beer.getUpc()) && Objects.equals(getQuantityOnHand(), beer.getQuantityOnHand()) && Objects.equals(getPrice(), beer.getPrice()) && Objects.equals(getCreatedDate(), beer.getCreatedDate()) && Objects.equals(getUpdateDate(), beer.getUpdateDate());
+        return Objects.equals(getId(), beerDTO.getId()) && Objects.equals(getVersion(), beerDTO.getVersion()) && Objects.equals(getBeerName(), beerDTO.getBeerName()) && getBeerStyle() == beerDTO.getBeerStyle() && Objects.equals(getUpc(), beerDTO.getUpc()) && Objects.equals(getQuantityOnHand(), beerDTO.getQuantityOnHand()) && Objects.equals(getPrice(), beerDTO.getPrice()) && Objects.equals(getCreatedDate(), beerDTO.getCreatedDate()) && Objects.equals(getUpdateDate(), beerDTO.getUpdateDate());
     }
 
     @Override

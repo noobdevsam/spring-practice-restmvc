@@ -4,18 +4,18 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Customer {
+public class CustomerDTO {
     private UUID id;
     private String name;
     private Integer version;
     private LocalDateTime createdDate;
     private LocalDateTime updateDate;
 
-    public Customer(UUID id,
-                    String name,
-                    Integer version,
-                    LocalDateTime createdDate,
-                    LocalDateTime updateDate) {
+    public CustomerDTO(UUID id,
+                       String name,
+                       Integer version,
+                       LocalDateTime createdDate,
+                       LocalDateTime updateDate) {
         this.id = id;
         this.name = name;
         this.version = version;
@@ -25,9 +25,9 @@ public class Customer {
 
     @Override
     public final boolean equals(Object o) {
-        if (!(o instanceof Customer customer)) return false;
+        if (!(o instanceof CustomerDTO customerDTO)) return false;
 
-        return Objects.equals(getId(), customer.getId()) && Objects.equals(getName(), customer.getName()) && Objects.equals(getVersion(), customer.getVersion()) && Objects.equals(getCreatedDate(), customer.getCreatedDate()) && Objects.equals(getUpdateDate(), customer.getUpdateDate());
+        return Objects.equals(getId(), customerDTO.getId()) && Objects.equals(getName(), customerDTO.getName()) && Objects.equals(getVersion(), customerDTO.getVersion()) && Objects.equals(getCreatedDate(), customerDTO.getCreatedDate()) && Objects.equals(getUpdateDate(), customerDTO.getUpdateDate());
     }
 
     @Override

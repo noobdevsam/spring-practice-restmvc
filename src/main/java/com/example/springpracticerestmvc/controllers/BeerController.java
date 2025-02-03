@@ -1,7 +1,7 @@
 package com.example.springpracticerestmvc.controllers;
 
 import com.example.springpracticerestmvc.exceptions.NotFoundException;
-import com.example.springpracticerestmvc.model.Beer;
+import com.example.springpracticerestmvc.model.BeerDTO;
 import com.example.springpracticerestmvc.services.BeerService;
 import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
@@ -26,12 +26,12 @@ public class BeerController {
     }
 
     @GetMapping(BEER_PATH)
-    public List<Beer> listBeers() {
+    public List<BeerDTO> listBeers() {
         return beerService.listBeers();
     }
 
     @GetMapping(BEER_PATH_ID)
-    public Beer getBeerById(@PathVariable("beerId") UUID beerId) {
+    public BeerDTO getBeerById(@PathVariable("beerId") UUID beerId) {
         log.debug("get beer by id - in controller");
         log.debug("requested beer id: {}", beerId);
         return beerService.getBeerById(beerId)
@@ -40,8 +40,8 @@ public class BeerController {
 
     @SuppressWarnings("unchecked")
     @PostMapping(BEER_PATH)
-    public ResponseEntity handlePost(@RequestBody Beer beer) {
-        var savedBeer = beerService.saveNewBeer(beer);
+    public ResponseEntity handlePost(@RequestBody BeerDTO beerDTO) {
+        var savedBeer = beerService.saveNewBeer(beerDTO);
 
         var headers = new HttpHeaders();
         headers.add("Location", BEER_PATH + "/" + savedBeer.getId().toString());
@@ -50,8 +50,8 @@ public class BeerController {
     }
 
     @PutMapping(BEER_PATH_ID)
-    public ResponseEntity updateBeerById(@PathVariable("beerId") UUID beerId, @RequestBody Beer beer) {
-        beerService.updateBeerById(beerId, beer);
+    public ResponseEntity updateBeerById(@PathVariable("beerId") UUID beerId, @RequestBody BeerDTO beerDTO) {
+        beerService.updateBeerById(beerId, beerDTO);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
@@ -62,8 +62,8 @@ public class BeerController {
     }
 
     @PatchMapping(BEER_PATH_ID)
-    public ResponseEntity patchBeerById(@PathVariable("beerId") UUID beerId, @RequestBody Beer beer) {
-        beerService.patchBeerById(beerId, beer);
+    public ResponseEntity patchBeerById(@PathVariable("beerId") UUID beerId, @RequestBody BeerDTO beerDTO) {
+        beerService.patchBeerById(beerId, beerDTO);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

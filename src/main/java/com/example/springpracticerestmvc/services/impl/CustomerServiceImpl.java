@@ -1,6 +1,6 @@
 package com.example.springpracticerestmvc.services.impl;
 
-import com.example.springpracticerestmvc.model.Customer;
+import com.example.springpracticerestmvc.model.CustomerDTO;
 import com.example.springpracticerestmvc.services.CustomerService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -11,10 +11,10 @@ import java.util.*;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-    private final Map<UUID, Customer> customerMap;
+    private final Map<UUID, CustomerDTO> customerMap;
 
     public CustomerServiceImpl() {
-        var cst1 = new Customer(
+        var cst1 = new CustomerDTO(
                 UUID.randomUUID(),
                 "Customer 1",
                 1,
@@ -22,7 +22,7 @@ public class CustomerServiceImpl implements CustomerService {
                 LocalDateTime.now()
                 );
 
-        var cst2 = new Customer(
+        var cst2 = new CustomerDTO(
                 UUID.randomUUID(),
                 "Customer 2",
                 1,
@@ -30,7 +30,7 @@ public class CustomerServiceImpl implements CustomerService {
                 LocalDateTime.now()
                 );
 
-        var cst3 = new Customer(
+        var cst3 = new CustomerDTO(
                 UUID.randomUUID(),
                 "Customer 3",
                 1,
@@ -45,22 +45,22 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> getAllCustomers() {
+    public List<CustomerDTO> getAllCustomers() {
         return new ArrayList<>(customerMap.values());
     }
 
     @Override
-    public Optional<Customer> getCustomerById(UUID id) {
+    public Optional<CustomerDTO> getCustomerById(UUID id) {
         return Optional.of(
                 customerMap.get(id)
         );
     }
 
     @Override
-    public Customer saveNewCustomer(Customer customer) {
-        var savedCustomer = new Customer(
+    public CustomerDTO saveNewCustomer(CustomerDTO customerDTO) {
+        var savedCustomer = new CustomerDTO(
                 UUID.randomUUID(),
-                customer.getName(),
+                customerDTO.getName(),
                 1,
                 LocalDateTime.now(),
                 LocalDateTime.now()
@@ -71,9 +71,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCustomerById(UUID customerId, Customer customer) {
+    public void updateCustomerById(UUID customerId, CustomerDTO customerDTO) {
         var existingCustomer = customerMap.get(customerId);
-        existingCustomer.setName(customer.getName());
+        existingCustomer.setName(customerDTO.getName());
     }
 
     @Override
@@ -82,11 +82,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void patchCustomerById(UUID customerId, Customer customer) {
+    public void patchCustomerById(UUID customerId, CustomerDTO customerDTO) {
         var existingCustomer = customerMap.get(customerId);
 
-        if (StringUtils.hasText(customer.getName())) {
-            existingCustomer.setName(customer.getName());
+        if (StringUtils.hasText(customerDTO.getName())) {
+            existingCustomer.setName(customerDTO.getName());
         }
     }
 }

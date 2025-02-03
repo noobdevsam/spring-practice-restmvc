@@ -1,6 +1,6 @@
 package com.example.springpracticerestmvc.controllers;
 
-import com.example.springpracticerestmvc.model.Customer;
+import com.example.springpracticerestmvc.model.CustomerDTO;
 import com.example.springpracticerestmvc.services.CustomerService;
 import com.example.springpracticerestmvc.services.impl.CustomerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,7 +44,7 @@ public class CustomerControllerTest {
     // Use it to capture argument values for further assertions.
 
     @Captor
-    ArgumentCaptor<Customer> customerArgumentCaptor;
+    ArgumentCaptor<CustomerDTO> customerArgumentCaptor;
 
     CustomerServiceImpl customerServiceImpl;
 
@@ -85,7 +85,7 @@ public class CustomerControllerTest {
         customer.setId(null);
         customer.setVersion(null);
 
-        given(customerService.saveNewCustomer(any(Customer.class)))
+        given(customerService.saveNewCustomer(any(CustomerDTO.class)))
                 .willReturn(customerServiceImpl.getAllCustomers().get(1));
 
         mockMvc.perform(
@@ -110,7 +110,7 @@ public class CustomerControllerTest {
         ).andExpect(status().isNoContent());
 
         // Verifies certain behavior (happened once).
-        verify(customerService).updateCustomerById(uuidArgumentCaptor.capture(), any(Customer.class));
+        verify(customerService).updateCustomerById(uuidArgumentCaptor.capture(), any(CustomerDTO.class));
 
         assertThat(customer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
     }

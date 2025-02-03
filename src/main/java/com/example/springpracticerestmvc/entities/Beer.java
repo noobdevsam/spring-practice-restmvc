@@ -11,6 +11,8 @@ import java.util.UUID;
 public class Beer {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(length = 36, nullable = false, updatable = false)
     private UUID id;
 
     @Version

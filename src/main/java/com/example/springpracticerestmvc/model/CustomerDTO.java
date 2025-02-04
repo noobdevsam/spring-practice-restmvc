@@ -1,27 +1,20 @@
 package com.example.springpracticerestmvc.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
+@Data
+@AllArgsConstructor
 public class CustomerDTO {
     private UUID id;
     private String name;
     private Integer version;
     private LocalDateTime createdDate;
     private LocalDateTime updateDate;
-
-    public CustomerDTO(UUID id,
-                       String name,
-                       Integer version,
-                       LocalDateTime createdDate,
-                       LocalDateTime updateDate) {
-        this.id = id;
-        this.name = name;
-        this.version = version;
-        this.createdDate = createdDate;
-        this.updateDate = updateDate;
-    }
 
     @Override
     public final boolean equals(Object o) {
@@ -40,43 +33,4 @@ public class CustomerDTO {
         return result;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public LocalDateTime getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(LocalDateTime updateDate) {
-        this.updateDate = updateDate;
-    }
 }

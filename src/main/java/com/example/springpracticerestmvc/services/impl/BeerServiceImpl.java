@@ -26,8 +26,8 @@ public class BeerServiceImpl implements BeerService {
                 "Galaxy Cat",
                 BeerStyle.PALE_ALE,
                 "12356",
-                new BigDecimal("12.99"),
                 122,
+                new BigDecimal("12.99"),
                 LocalDateTime.now(),
                 LocalDateTime.now()
                 );
@@ -38,8 +38,8 @@ public class BeerServiceImpl implements BeerService {
                 "Crank",
                 BeerStyle.PALE_ALE,
                 "123562222",
-                new BigDecimal("11.99"),
                 4652,
+                new BigDecimal("11.99"),
                 LocalDateTime.now(),
                 LocalDateTime.now()
                 );
@@ -50,8 +50,8 @@ public class BeerServiceImpl implements BeerService {
                 "Sunshine city",
                 BeerStyle.IPA,
                 "1235544444466",
-                new BigDecimal("132.99"),
                 12,
+                new BigDecimal("132.99"),
                 LocalDateTime.now(),
                 LocalDateTime.now()
                 );
@@ -82,8 +82,8 @@ public class BeerServiceImpl implements BeerService {
                 beerDTO.getBeerName(),
                 beerDTO.getBeerStyle(),
                 beerDTO.getUpc(),
-                beerDTO.getPrice(),
                 beerDTO.getQuantityOnHand(),
+                beerDTO.getPrice(),
                 beerDTO.getCreatedDate(),
                 beerDTO.getUpdateDate()
                 );

@@ -2,12 +2,19 @@ package com.example.springpracticerestmvc.entities;
 
 import com.example.springpracticerestmvc.model.BeerStyle;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
+@RequiredArgsConstructor
 public class Beer {
 
     @Id
@@ -46,75 +53,4 @@ public class Beer {
         return result;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public String getBeerName() {
-        return beerName;
-    }
-
-    public void setBeerName(String beerName) {
-        this.beerName = beerName;
-    }
-
-    public BeerStyle getBeerStyle() {
-        return beerStyle;
-    }
-
-    public void setBeerStyle(BeerStyle beerStyle) {
-        this.beerStyle = beerStyle;
-    }
-
-    public String getUpc() {
-        return upc;
-    }
-
-    public void setUpc(String upc) {
-        this.upc = upc;
-    }
-
-    public Integer getQuantityOnHand() {
-        return quantityOnHand;
-    }
-
-    public void setQuantityOnHand(Integer quantityOnHand) {
-        this.quantityOnHand = quantityOnHand;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public LocalDateTime getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(LocalDateTime updateDate) {
-        this.updateDate = updateDate;
-    }
 }

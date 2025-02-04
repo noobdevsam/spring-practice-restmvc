@@ -1,12 +1,18 @@
 package com.example.springpracticerestmvc.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
+@RequiredArgsConstructor
 public class Customer {
 
     @Id
@@ -20,45 +26,6 @@ public class Customer {
     private LocalDateTime createdDate;
     private LocalDateTime updateDate;
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public LocalDateTime getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(LocalDateTime updateDate) {
-        this.updateDate = updateDate;
-    }
 
     @Override
     public final boolean equals(Object o) {

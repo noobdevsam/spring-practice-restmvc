@@ -2,6 +2,7 @@ package com.example.springpracticerestmvc.entities;
 
 import com.example.springpracticerestmvc.model.BeerStyle;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -25,12 +26,32 @@ public class Beer {
     @Version
     private Integer version;
     private String beerName;
+
+    @Enumerated(EnumType.STRING)
     private BeerStyle beerStyle;
+
     private String upc;
     private Integer quantityOnHand;
     private BigDecimal price;
     private LocalDateTime createdDate;
     private LocalDateTime updateDate;
+
+    @Builder
+    public Beer(String beerName,
+                BeerStyle beerStyle,
+                String upc,
+                Integer quantityOnHand,
+                BigDecimal price,
+                LocalDateTime createdDate,
+                LocalDateTime updateDate) {
+        this.beerName = beerName;
+        this.beerStyle = beerStyle;
+        this.upc = upc;
+        this.quantityOnHand = quantityOnHand;
+        this.price = price;
+        this.createdDate = createdDate;
+        this.updateDate = updateDate;
+    }
 
     @Override
     public final boolean equals(Object o) {

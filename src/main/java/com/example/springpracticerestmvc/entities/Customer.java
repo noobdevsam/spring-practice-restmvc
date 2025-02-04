@@ -1,6 +1,7 @@
 package com.example.springpracticerestmvc.entities;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -26,6 +27,14 @@ public class Customer {
     private LocalDateTime createdDate;
     private LocalDateTime updateDate;
 
+    @Builder
+    public Customer(String name,
+                    LocalDateTime createdDate,
+                    LocalDateTime updateDate) {
+        this.name = name;
+        this.createdDate = createdDate;
+        this.updateDate = updateDate;
+    }
 
     @Override
     public final boolean equals(Object o) {

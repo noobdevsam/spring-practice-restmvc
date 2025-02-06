@@ -6,6 +6,7 @@ import com.example.springpracticerestmvc.repositories.CustomerRepository;
 import com.example.springpracticerestmvc.services.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Profile("jpa")
 @Primary
 @RequiredArgsConstructor
 public class CustomerServiceJpaImpl implements CustomerService {

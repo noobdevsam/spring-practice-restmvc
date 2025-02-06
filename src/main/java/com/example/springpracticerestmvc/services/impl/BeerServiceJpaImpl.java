@@ -6,13 +6,16 @@ import com.example.springpracticerestmvc.repositories.BeerRepository;
 import com.example.springpracticerestmvc.services.BeerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
+@Profile("jpa")
 @Primary
 @RequiredArgsConstructor
 public class BeerServiceJpaImpl implements BeerService {
@@ -22,12 +25,17 @@ public class BeerServiceJpaImpl implements BeerService {
 
     @Override
     public List<BeerDTO> listBeers() {
-        return List.of();
+        return beerRepository.findAll()
+                .stream()
+                .map(beerMapper::beerToBeerDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<BeerDTO> getBeerById(UUID beerId) {
-        return Optional.empty();
+        return Optional.ofNullable(
+                beerMapper.beerToBeerDto(beerRepository.findById(beerId).orElse(null))
+        );
     }
 
     @Override

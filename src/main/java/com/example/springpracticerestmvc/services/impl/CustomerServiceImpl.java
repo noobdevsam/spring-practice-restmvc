@@ -1,6 +1,6 @@
 package com.example.springpracticerestmvc.services.impl;
 
-import com.example.springpracticerestmvc.model.Customer;
+import com.example.springpracticerestmvc.model.CustomerDTO;
 import com.example.springpracticerestmvc.services.CustomerService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -11,32 +11,32 @@ import java.util.*;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-    private Map<UUID, Customer> customerMap;
+    private final Map<UUID, CustomerDTO> customerMap;
 
     public CustomerServiceImpl() {
-        var cst1 = Customer.builder()
-                .id(UUID.randomUUID())
-                .name("Customer 1")
-                .version(1)
-                .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
-                .build();
+        var cst1 = new CustomerDTO(
+                UUID.randomUUID(),
+                "Customer 1",
+                1,
+                LocalDateTime.now(),
+                LocalDateTime.now()
+                );
 
-        var cst2 = Customer.builder()
-                .id(UUID.randomUUID())
-                .name("Customer 2")
-                .version(1)
-                .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
-                .build();
+        var cst2 = new CustomerDTO(
+                UUID.randomUUID(),
+                "Customer 2",
+                1,
+                LocalDateTime.now(),
+                LocalDateTime.now()
+                );
 
-        var cst3 = Customer.builder()
-                .id(UUID.randomUUID())
-                .name("Customer 3")
-                .version(1)
-                .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
-                .build();
+        var cst3 = new CustomerDTO(
+                UUID.randomUUID(),
+                "Customer 3",
+                1,
+                LocalDateTime.now(),
+                LocalDateTime.now()
+                );
 
         customerMap = new HashMap<>();
         customerMap.put(cst1.getId(), cst1);
@@ -45,33 +45,35 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> getAllCustomers() {
+    public List<CustomerDTO> getAllCustomers() {
         return new ArrayList<>(customerMap.values());
     }
 
     @Override
-    public Customer getCustomerById(UUID id) {
-        return customerMap.get(id);
+    public Optional<CustomerDTO> getCustomerById(UUID id) {
+        return Optional.of(
+                customerMap.get(id)
+        );
     }
 
     @Override
-    public Customer saveNewCustomer(Customer customer) {
-        var savedCustomer = Customer.builder()
-                .id(UUID.randomUUID())
-                .version(1)
-                .name(customer.getName())
-                .updateDate(LocalDateTime.now())
-                .createdDate(LocalDateTime.now())
-                .build();
+    public CustomerDTO saveNewCustomer(CustomerDTO customerDTO) {
+        var savedCustomer = new CustomerDTO(
+                UUID.randomUUID(),
+                customerDTO.getName(),
+                1,
+                LocalDateTime.now(),
+                LocalDateTime.now()
+                );
 
         customerMap.put(savedCustomer.getId(), savedCustomer);
         return savedCustomer;
     }
 
     @Override
-    public void updateCustomerById(UUID customerId, Customer customer) {
+    public void updateCustomerById(UUID customerId, CustomerDTO customerDTO) {
         var existingCustomer = customerMap.get(customerId);
-        existingCustomer.setName(customer.getName());
+        existingCustomer.setName(customerDTO.getName());
     }
 
     @Override
@@ -80,25 +82,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void pathCustomerById(UUID customerId, Customer customer) {
+    public void patchCustomerById(UUID customerId, CustomerDTO customerDTO) {
         var existingCustomer = customerMap.get(customerId);
 
-        if (StringUtils.hasText(customer.getName())) {
-            existingCustomer.setName(customer.getName());
+        if (StringUtils.hasText(customerDTO.getName())) {
+            existingCustomer.setName(customerDTO.getName());
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

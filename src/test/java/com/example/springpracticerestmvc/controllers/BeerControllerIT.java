@@ -1,10 +1,12 @@
 package com.example.springpracticerestmvc.controllers;
 
 import com.example.springpracticerestmvc.exceptions.NotFoundException;
+import com.example.springpracticerestmvc.model.BeerDTO;
 import com.example.springpracticerestmvc.repositories.BeerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,5 +54,24 @@ class BeerControllerIT {
         var dto = beerController.getBeerById(beer.getId());
 
         assertThat(dto).isNotNull();
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void test_save_new_beer() {
+        var beerDto = new BeerDTO();
+        beerDto.setBeerName("New Beer");
+
+        var responseEntity = beerController.handlePost(beerDto);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+        assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
+
+        String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
+        var savedUUID = UUID.fromString(locationUUID[4]);
+        var beer = beerRepository.findById(savedUUID).get();
+
+        assertThat(beer).isNotNull();
     }
 }

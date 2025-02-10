@@ -47,9 +47,7 @@ class BeerControllerIT {
 
     @Test
     void test_beer_not_found() {
-        assertThrows(NotFoundException.class, () -> {
-            beerController.getBeerById(UUID.randomUUID());
-        });
+        assertThrows(NotFoundException.class, () -> beerController.getBeerById(UUID.randomUUID()));
     }
 
     @Test
@@ -94,6 +92,11 @@ class BeerControllerIT {
 
         var updatedBeer = beerRepository.findById(beer.getId()).get();
         assertThat(updatedBeer.getBeerName()).isEqualTo(beerName);
+    }
+
+    @Test
+    void test_update_not_found() {
+        assertThrows(NotFoundException.class, () -> beerController.updateBeerById(UUID.randomUUID(), new BeerDTO()));
     }
 }
 

@@ -111,6 +111,7 @@ class BeerControllerTest {
     void test_update_beer() throws Exception {
         var beer = beerServiceImpl.listBeers().getFirst();
 
+        given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
         mockMvc.perform(
                 put(BeerController.BEER_PATH_ID, beer.getId())
                         .contentType(MediaType.APPLICATION_JSON)

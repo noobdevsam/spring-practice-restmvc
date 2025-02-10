@@ -6,13 +6,16 @@ import com.example.springpracticerestmvc.repositories.CustomerRepository;
 import com.example.springpracticerestmvc.services.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
+@Profile("jpa")
 @Primary
 @RequiredArgsConstructor
 public class CustomerServiceJpaImpl implements CustomerService {
@@ -22,12 +25,17 @@ public class CustomerServiceJpaImpl implements CustomerService {
 
     @Override
     public List<CustomerDTO> getAllCustomers() {
-        return List.of();
+        return customerRepository.findAll()
+                .stream()
+                .map(customerMapper::customerToCustomerDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<CustomerDTO> getCustomerById(UUID id) {
-        return Optional.empty();
+        return Optional.ofNullable(customerMapper.customerToCustomerDto(
+                customerRepository.findById(id).orElse(null)
+        ));
     }
 
     @Override

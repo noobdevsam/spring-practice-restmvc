@@ -103,12 +103,13 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public void deleteById(UUID beerId) {
+    public Boolean deleteById(UUID beerId) {
         beerMap.remove(beerId);
+        return true;
     }
 
     @Override
-    public void patchBeerById(UUID beerId, BeerDTO beerDTO) {
+    public Optional<BeerDTO> patchBeerById(UUID beerId, BeerDTO beerDTO) {
         var existingBeer = beerMap.get(beerId);
 
         if (StringUtils.hasText(beerDTO.getBeerName())) {
@@ -130,5 +131,7 @@ public class BeerServiceImpl implements BeerService {
         if (StringUtils.hasText(beerDTO.getUpc())) {
             existingBeer.setUpc(beerDTO.getUpc());
         }
+
+        return Optional.of(existingBeer);
     }
 }

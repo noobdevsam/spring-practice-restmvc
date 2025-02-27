@@ -166,4 +166,19 @@ class BeerControllerTest {
         ).andExpect(status().isNotFound());
     }
 
+    @Test
+    void test_create_beer_null_beerName() throws Exception {
+        var beerDTO = new BeerDTO();
+
+        given(beerService.saveNewBeer(any(BeerDTO.class)))
+                .willReturn(beerServiceImpl.listBeers().getFirst());
+
+        mockMvc.perform(
+                post(BeerController.BEER_PATH)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(objectMapper.writeValueAsString(beerDTO))
+        ).andExpect(status().isBadRequest());
+    }
+
 }

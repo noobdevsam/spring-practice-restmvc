@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -164,6 +165,26 @@ class BeerControllerTest {
         mockMvc.perform(
                 get(BeerController.BEER_PATH_ID, UUID.randomUUID())
         ).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void test_create_beer_null_beerName() throws Exception {
+        var beerDTO = new BeerDTO();
+
+        given(beerService.saveNewBeer(any(BeerDTO.class)))
+                .willReturn(beerServiceImpl.listBeers().getFirst());
+
+        MvcResult mvcResult = mockMvc.perform(
+                post(BeerController.BEER_PATH)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(objectMapper.writeValueAsString(beerDTO))
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.length()", is(2)))
+                .andReturn();
+
+        System.out.println(mvcResult.getResponse().getContentAsString());
     }
 
 }

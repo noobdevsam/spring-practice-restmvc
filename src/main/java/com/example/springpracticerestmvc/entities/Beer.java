@@ -2,6 +2,9 @@ package com.example.springpracticerestmvc.entities;
 
 import com.example.springpracticerestmvc.model.BeerStyle;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +28,24 @@ public class Beer {
 
     @Version
     private Integer version;
+
+    @NotNull
+    @NotBlank
+    @Size(max = 30)
+    @Column(length = 30)
     private String beerName;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private BeerStyle beerStyle;
 
+    @NotBlank
+    @NotNull
+    @Size(max = 255)
     private String upc;
     private Integer quantityOnHand;
+
+    @NotNull
     private BigDecimal price;
     private LocalDateTime createdDate;
     private LocalDateTime updateDate;

@@ -1,5 +1,6 @@
 package com.example.springpracticerestmvc.controllers;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,6 +32,21 @@ public class CustomErrorController {
     @SuppressWarnings("rawtypes")
     @ExceptionHandler(TransactionSystemException.class)
     ResponseEntity handle_jpa_violations(TransactionSystemException exception) {
-        return ResponseEntity.badRequest().build();
+        ResponseEntity.BodyBuilder response_entity = ResponseEntity.badRequest();
+
+        if (exception.getCause().getCause() instanceof ConstraintViolationException) {
+            ConstraintViolationException cve = (ConstraintViolationException) exception.getCause().getCause();
+
+            List errors = cve.getConstraintViolations().stream()
+                    .map(constraintViolation -> {
+                        Map<String, String> error_map = new HashMap<>();
+                        error_map.put(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
+                        return error_map;
+                    }).collect(Collectors.toList());
+
+            return response_entity.body(errors);
+        }
+
+        return response_entity.build();
     }
 }

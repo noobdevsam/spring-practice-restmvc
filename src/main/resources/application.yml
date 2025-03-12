@@ -9,7 +9,7 @@ spring:
     datasource:
         url: jdbc:h2:mem:testdb
     profiles:
-        active: jpa
+        active: localdb
 
 logging:
     level:

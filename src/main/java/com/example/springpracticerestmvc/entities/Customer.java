@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -18,7 +20,8 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(length = 36, updatable = false, nullable = false, columnDefinition = "varchar")
+    @Column(length = 36, updatable = false, nullable = false, columnDefinition = "varchar(36)")
+    @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
     private String name;
 

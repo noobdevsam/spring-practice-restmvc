@@ -11,6 +11,20 @@ spring:
         username: restadmin
         password: password
         url: jdbc:mariadb://localhost:3306/restdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+        hikari:
+            pool_name: RestDB-Pool
+            maximum_pool_size: 5
+            data_source_properties:
+                cachePrepStmts: true
+                prepStmtCacheSize: 250
+                prepStmtCacheSqlLimit: 2048
+                useServerPrepStmts: true
+                useLocalSessionState: true
+                rewriteBatchStatements: true
+                cacheServerConfiguration: true
+                cacheResultSetMetadata: true
+                elideSetAutoCommits: true
+                maintainTimeStats: false
 
 logging:
     level:

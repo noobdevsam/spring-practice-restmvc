@@ -3,6 +3,16 @@ spring:
         name: SpringPracticeRESTMVC
     jpa:
         show-sql: true
+#        to generate database schema automatically, uncomment the properties bellow
+#        properties:
+#            jakarta:
+#                persistence:
+#                    schema-generation:
+#                        scripts:
+#                            action: drop-and-create
+#                            create-source: metadata
+#                            drop-target: drop-and-create.sql
+#                            create-target: drop-and-create.sql
     h2:
         console:
             enabled: true

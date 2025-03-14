@@ -12,9 +12,9 @@ spring:
         password: password
         url: jdbc:mariadb://localhost:3306/restdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
         hikari:
-            pool_name: RestDB-Pool
-            maximum_pool_size: 5
-            data_source_properties:
+            pool-name: RestDB-Pool
+            maximum-pool-size: 5
+            data-source-properties:
                 cachePrepStmts: true
                 prepStmtCacheSize: 250
                 prepStmtCacheSqlLimit: 2048

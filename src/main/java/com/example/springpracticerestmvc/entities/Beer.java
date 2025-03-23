@@ -34,8 +34,8 @@ public class Beer {
 
     @NotNull
     @NotBlank
-    @Size(max = 30)
-    @Column(length = 30)
+    @Size(max = 50)
+    @Column(length = 50)
     private String beerName;
 
     @Enumerated(EnumType.STRING)

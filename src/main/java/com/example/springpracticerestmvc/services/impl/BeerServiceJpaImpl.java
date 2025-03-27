@@ -3,6 +3,7 @@ package com.example.springpracticerestmvc.services.impl;
 import com.example.springpracticerestmvc.entities.Beer;
 import com.example.springpracticerestmvc.mappers.BeerMapper;
 import com.example.springpracticerestmvc.model.BeerDTO;
+import com.example.springpracticerestmvc.model.BeerStyle;
 import com.example.springpracticerestmvc.repositories.BeerRepository;
 import com.example.springpracticerestmvc.services.BeerService;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +28,14 @@ public class BeerServiceJpaImpl implements BeerService {
     private final BeerMapper beerMapper;
 
     @Override
-    public List<BeerDTO> listBeers(String beerName) {
+    public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle) {
 
         List<Beer> beerList;
 
-        if (StringUtils.hasText(beerName)) {
+        if (StringUtils.hasText(beerName) && beerStyle == null) {
             beerList = listBeersByName(beerName);
+        } else if (!StringUtils.hasText(beerName) && beerStyle != null) {
+            beerList = listBeersByStyle(beerStyle);
         } else {
             beerList = beerRepository.findAll();
         }
@@ -41,6 +44,10 @@ public class BeerServiceJpaImpl implements BeerService {
                 .stream()
                 .map(beerMapper::beerToBeerDto)
                 .collect(Collectors.toList());
+    }
+
+    private List<Beer> listBeersByStyle(BeerStyle beerStyle) {
+        return beerRepository.findAllByBeerStyle(beerStyle);
     }
 
     public List<Beer> listBeersByName(String beerName) {

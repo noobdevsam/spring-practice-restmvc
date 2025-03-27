@@ -2,6 +2,7 @@ package com.example.springpracticerestmvc.controllers;
 
 import com.example.springpracticerestmvc.exceptions.NotFoundException;
 import com.example.springpracticerestmvc.model.BeerDTO;
+import com.example.springpracticerestmvc.model.BeerStyle;
 import com.example.springpracticerestmvc.services.BeerService;
 import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
@@ -27,8 +28,11 @@ public class BeerController {
     }
 
     @GetMapping(BEER_PATH)
-    public List<BeerDTO> listBeers(String beerName) {
-        return beerService.listBeers(beerName);
+    public List<BeerDTO> listBeers(
+            @RequestParam(required = false) String beerName,
+            @RequestParam(required = false) BeerStyle beerStyle
+    ) {
+        return beerService.listBeers(beerName, beerStyle);
     }
 
     @GetMapping(BEER_PATH_ID)

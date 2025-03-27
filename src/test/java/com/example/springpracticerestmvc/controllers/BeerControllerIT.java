@@ -3,6 +3,7 @@ package com.example.springpracticerestmvc.controllers;
 import com.example.springpracticerestmvc.exceptions.NotFoundException;
 import com.example.springpracticerestmvc.mappers.BeerMapper;
 import com.example.springpracticerestmvc.model.BeerDTO;
+import com.example.springpracticerestmvc.model.BeerStyle;
 import com.example.springpracticerestmvc.repositories.BeerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,7 +60,7 @@ class BeerControllerIT {
 
     @Test
     void test_list_beers() {
-        var dtos = beerController.listBeers(null);
+        var dtos = beerController.listBeers(null, null);
 
         assertThat(dtos.size()).isEqualTo(2412);
     }
@@ -69,7 +70,7 @@ class BeerControllerIT {
     @Rollback
     void test_empty_list() {
         beerRepository.deleteAll();
-        var dtos = beerController.listBeers(null);
+        var dtos = beerController.listBeers(null, null);
 
         assertThat(dtos.size()).isEqualTo(0);
     }
@@ -82,8 +83,16 @@ class BeerControllerIT {
         )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(321)));
+    }
 
-        // test passes, but functionality is not implemented in the controller or service layer
+    @Test
+    void test_list_beers_by_style() throws Exception {
+        mockMvc.perform(
+                        get(BeerController.BEER_PATH)
+                                .queryParam("beerStyle", BeerStyle.IPA.name())
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(548)));
     }
 
     @Test

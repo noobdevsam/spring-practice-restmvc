@@ -26,6 +26,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.core.Is.is;
@@ -71,6 +72,18 @@ class BeerControllerIT {
         var dtos = beerController.listBeers();
 
         assertThat(dtos.size()).isEqualTo(0);
+    }
+
+    @Test
+    void test_list_beers_by_name() throws Exception {
+        mockMvc.perform(
+                get(BeerController.BEER_PATH)
+                        .queryParam("beerName", "IPA")
+        )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(2413)));
+
+        // test passes, but functionality is not implemented in the controller
     }
 
     @Test

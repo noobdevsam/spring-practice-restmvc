@@ -1,5 +1,6 @@
 package com.example.springpracticerestmvc.services.impl;
 
+import com.example.springpracticerestmvc.entities.Beer;
 import com.example.springpracticerestmvc.mappers.BeerMapper;
 import com.example.springpracticerestmvc.model.BeerDTO;
 import com.example.springpracticerestmvc.repositories.BeerRepository;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,10 +29,23 @@ public class BeerServiceJpaImpl implements BeerService {
 
     @Override
     public List<BeerDTO> listBeers(String beerName) {
-        return beerRepository.findAll()
+
+        List<Beer> beerList;
+
+        if (StringUtils.hasText(beerName)) {
+            beerList = listBeersByName(beerName);
+        } else {
+            beerList = beerRepository.findAll();
+        }
+
+        return beerList
                 .stream()
                 .map(beerMapper::beerToBeerDto)
                 .collect(Collectors.toList());
+    }
+
+    private List<Beer> listBeersByName(String beerName) {
+        return new ArrayList<>();
     }
 
     @Override

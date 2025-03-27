@@ -59,7 +59,7 @@ class BeerControllerIT {
 
     @Test
     void test_list_beers() {
-        var dtos = beerController.listBeers();
+        var dtos = beerController.listBeers(null);
 
         assertThat(dtos.size()).isEqualTo(2412);
     }
@@ -69,7 +69,7 @@ class BeerControllerIT {
     @Rollback
     void test_empty_list() {
         beerRepository.deleteAll();
-        var dtos = beerController.listBeers();
+        var dtos = beerController.listBeers(null);
 
         assertThat(dtos.size()).isEqualTo(0);
     }

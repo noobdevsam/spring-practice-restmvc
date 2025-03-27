@@ -81,7 +81,7 @@ class BeerControllerIT {
                         .queryParam("beerName", "IPA")
         )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", is(100)));
+                .andExpect(jsonPath("$.size()", is(321)));
 
         // test passes, but functionality is not implemented in the controller or service layer
     }

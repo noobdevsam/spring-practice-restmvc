@@ -58,7 +58,7 @@ public class BootstrapData implements CommandLineRunner {
 
                 beerRepository.save(Beer.builder()
                         .beerName(StringUtils.abbreviate(
-                                beerCSVRecord.getBeer(), 255
+                                beerCSVRecord.getBeer(), 50
                         ))
                         .beerStyle(beerStyle)
                         .price(BigDecimal.TEN)

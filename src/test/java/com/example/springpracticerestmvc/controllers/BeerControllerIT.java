@@ -3,8 +3,10 @@ package com.example.springpracticerestmvc.controllers;
 import com.example.springpracticerestmvc.exceptions.NotFoundException;
 import com.example.springpracticerestmvc.mappers.BeerMapper;
 import com.example.springpracticerestmvc.model.BeerDTO;
+import com.example.springpracticerestmvc.model.BeerStyle;
 import com.example.springpracticerestmvc.repositories.BeerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +26,12 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.core.Is.is;
 
 @SpringBootTest
 @ActiveProfiles("jpa")
@@ -58,7 +61,7 @@ class BeerControllerIT {
 
     @Test
     void test_list_beers() {
-        var dtos = beerController.listBeers();
+        var dtos = beerController.listBeers(null, null, false);
 
         assertThat(dtos.size()).isEqualTo(2412);
     }
@@ -68,9 +71,66 @@ class BeerControllerIT {
     @Rollback
     void test_empty_list() {
         beerRepository.deleteAll();
-        var dtos = beerController.listBeers();
+        var dtos = beerController.listBeers(null, null, false);
 
         assertThat(dtos.size()).isEqualTo(0);
+    }
+
+    @Test
+    void test_list_beers_by_name() throws Exception {
+        mockMvc.perform(
+                get(BeerController.BEER_PATH)
+                        .queryParam("beerName", "IPA")
+        )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(321)));
+    }
+
+    @Test
+    void test_list_beers_by_style() throws Exception {
+        mockMvc.perform(
+                        get(BeerController.BEER_PATH)
+                                .queryParam("beerStyle", BeerStyle.IPA.name())
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(548)));
+    }
+
+    @Test
+    void test_list_beers_by_name_and_style() throws Exception {
+        mockMvc.perform(
+                        get(BeerController.BEER_PATH)
+                                .queryParam("beerName", "IPA")
+                                .queryParam("beerStyle", BeerStyle.IPA.name())
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(299)));
+    }
+
+    @Test
+    void test_list_beers_by_name_and_style_show_inventory_false() throws Exception {
+        mockMvc.perform(
+                        get(BeerController.BEER_PATH)
+                                .queryParam("beerName", "IPA")
+                                .queryParam("beerStyle", BeerStyle.IPA.name())
+                                .queryParam("showInventory", "false")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(299)))
+                .andExpect(jsonPath("$.[0].quantityOnHand").value(IsNull.nullValue()));
+    }
+
+    @Test
+    void test_list_beers_by_name_and_style_show_inventory_true() throws Exception {
+        mockMvc.perform(
+                        get(BeerController.BEER_PATH)
+                                .queryParam("beerName", "IPA")
+                                .queryParam("beerStyle", BeerStyle.IPA.name())
+                                .queryParam("showInventory", "true")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(299)))
+                .andExpect(jsonPath("$.[0].quantityOnHand").value(IsNull.notNullValue()));
     }
 
     @Test

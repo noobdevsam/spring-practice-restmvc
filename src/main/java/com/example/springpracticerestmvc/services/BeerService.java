@@ -1,13 +1,14 @@
 package com.example.springpracticerestmvc.services;
 
 import com.example.springpracticerestmvc.model.BeerDTO;
+import com.example.springpracticerestmvc.model.BeerStyle;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface BeerService {
-    List<BeerDTO> listBeers();
+    List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, Boolean showInventory);
 
     Optional<BeerDTO> getBeerById(UUID beerId);
 

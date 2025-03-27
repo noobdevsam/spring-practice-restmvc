@@ -26,7 +26,7 @@ public class BeerServiceJpaImpl implements BeerService {
     private final BeerMapper beerMapper;
 
     @Override
-    public List<BeerDTO> listBeers() {
+    public List<BeerDTO> listBeers(String beerName) {
         return beerRepository.findAll()
                 .stream()
                 .map(beerMapper::beerToBeerDto)

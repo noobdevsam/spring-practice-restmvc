@@ -21,6 +21,11 @@ spring:
     flyway:
         enabled: false
 
+# enable 'localdb' profile in application.properties
+# or in run configuration for intellij idea ultimate
+#   1. disable non integration tests
+#   2. use @ActiveProfiles("jpa") in integration test classes
+
 logging:
     level:
         com:

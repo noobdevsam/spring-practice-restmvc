@@ -5,7 +5,6 @@ import com.example.springpracticerestmvc.services.BeerService;
 import com.example.springpracticerestmvc.services.impl.BeerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -31,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(BeerController.class)
-@Disabled
 class BeerControllerTest {
 
     @Autowired
@@ -180,7 +178,7 @@ class BeerControllerTest {
                 post(BeerController.BEER_PATH)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .contentType(objectMapper.writeValueAsString(beerDTO))
+                        .content(objectMapper.writeValueAsString(beerDTO))
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.length()", is(6)))

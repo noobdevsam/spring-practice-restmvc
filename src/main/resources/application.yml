@@ -18,8 +18,6 @@ spring:
             enabled: true
     datasource:
         url: jdbc:h2:mem:testdb
-    profiles:
-        active: localdb
     flyway:
         enabled: false
 

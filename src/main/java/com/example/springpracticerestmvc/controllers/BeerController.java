@@ -5,13 +5,13 @@ import com.example.springpracticerestmvc.model.BeerDTO;
 import com.example.springpracticerestmvc.model.BeerStyle;
 import com.example.springpracticerestmvc.services.BeerService;
 import org.slf4j.Logger;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -28,7 +28,7 @@ public class BeerController {
     }
 
     @GetMapping(BEER_PATH)
-    public List<BeerDTO> listBeers(
+    public Page<BeerDTO> listBeers(
             @RequestParam(required = false) String beerName,
             @RequestParam(required = false) BeerStyle beerStyle,
             @RequestParam(required = false) Boolean showInventory,

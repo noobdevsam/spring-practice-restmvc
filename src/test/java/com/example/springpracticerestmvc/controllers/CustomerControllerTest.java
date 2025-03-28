@@ -82,11 +82,11 @@ public class CustomerControllerTest {
     @Test
     void test_create_new_customer() throws Exception {
         var customer = customerServiceImpl.getAllCustomers().getFirst();
-        customer.setId(null);
+        customer.setId(UUID.randomUUID());
         customer.setVersion(null);
 
         given(customerService.saveNewCustomer(any(CustomerDTO.class)))
-                .willReturn(customerServiceImpl.getAllCustomers().get(1));
+                .willReturn(customerServiceImpl.getAllCustomers().getFirst());
 
         mockMvc.perform(
                         post(CustomerController.CUSTOMER_PATH)

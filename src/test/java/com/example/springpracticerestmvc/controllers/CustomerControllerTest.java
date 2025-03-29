@@ -5,7 +5,6 @@ import com.example.springpracticerestmvc.services.CustomerService;
 import com.example.springpracticerestmvc.services.impl.CustomerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -29,7 +28,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CustomerController.class)
-@Disabled
 public class CustomerControllerTest {
     
     @Autowired
@@ -84,11 +82,11 @@ public class CustomerControllerTest {
     @Test
     void test_create_new_customer() throws Exception {
         var customer = customerServiceImpl.getAllCustomers().getFirst();
-        customer.setId(null);
+        customer.setId(UUID.randomUUID());
         customer.setVersion(null);
 
         given(customerService.saveNewCustomer(any(CustomerDTO.class)))
-                .willReturn(customerServiceImpl.getAllCustomers().get(1));
+                .willReturn(customerServiceImpl.getAllCustomers().getFirst());
 
         mockMvc.perform(
                         post(CustomerController.CUSTOMER_PATH)

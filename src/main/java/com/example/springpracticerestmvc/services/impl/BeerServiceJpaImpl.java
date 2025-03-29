@@ -25,11 +25,10 @@ import java.util.concurrent.atomic.AtomicReference;
 @RequiredArgsConstructor
 public class BeerServiceJpaImpl implements BeerService {
 
-    private final BeerRepository beerRepository;
-    private final BeerMapper beerMapper;
-
     private static final int DEFAULT_PAGE = 0;
     private static final int DEFAULT_PAGE_SIZE = 25;
+    private final BeerRepository beerRepository;
+    private final BeerMapper beerMapper;
 
     @Override
     public Page<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, Boolean showInventory, Integer pageNumber, Integer pageSize) {
@@ -60,7 +59,7 @@ public class BeerServiceJpaImpl implements BeerService {
         int queryPageSize;
 
         if (pageNumber != null && pageNumber > 0) {
-            queryPageNumber = pageNumber;
+            queryPageNumber = pageNumber - 1;
         } else {
             queryPageNumber = DEFAULT_PAGE;
         }

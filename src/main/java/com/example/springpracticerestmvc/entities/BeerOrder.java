@@ -12,6 +12,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -69,5 +70,24 @@ public class BeerOrder {
 
     public boolean isNew() {
         return this.id == null;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof BeerOrder beerOrder)) return false;
+
+        return Objects.equals(getId(), beerOrder.getId()) && Objects.equals(getVersion(), beerOrder.getVersion()) && Objects.equals(getCreatedDate(), beerOrder.getCreatedDate()) && Objects.equals(getLastModifiedDate(), beerOrder.getLastModifiedDate()) && Objects.equals(getCustomerRef(), beerOrder.getCustomerRef()) && Objects.equals(getCustomer(), beerOrder.getCustomer()) && Objects.equals(getBeerOrderLines(), beerOrder.getBeerOrderLines());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(getId());
+        result = 31 * result + Objects.hashCode(getVersion());
+        result = 31 * result + Objects.hashCode(getCreatedDate());
+        result = 31 * result + Objects.hashCode(getLastModifiedDate());
+        result = 31 * result + Objects.hashCode(getCustomerRef());
+        result = 31 * result + Objects.hashCode(getCustomer());
+        result = 31 * result + Objects.hashCode(getBeerOrderLines());
+        return result;
     }
 }

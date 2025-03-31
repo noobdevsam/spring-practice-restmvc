@@ -46,13 +46,17 @@ public class BeerOrder {
     @OneToMany(mappedBy = "beerOrder")
     private Set<BeerOrderLine> beerOrderLines = new HashSet<>();
 
+    @OneToOne
+    private BeerOrderShipment beerOrderShpment;
+
     public BeerOrder(UUID id,
                      Long version,
                      Timestamp createdDate,
                      Timestamp lastModifiedDate,
                      String customerRef,
                      Customer customer,
-                     Set<BeerOrderLine> beerOrderLines) {
+                     Set<BeerOrderLine> beerOrderLines,
+                     BeerOrderShipment beerOrderShpment) {
         this.id = id;
         this.version = version;
         this.createdDate = createdDate;
@@ -60,6 +64,7 @@ public class BeerOrder {
         this.customerRef = customerRef;
         this.setCustomer(customer);
         this.beerOrderLines = beerOrderLines;
+        this.beerOrderShpment = beerOrderShpment;
     }
 
     public void setCustomer(Customer customer) {

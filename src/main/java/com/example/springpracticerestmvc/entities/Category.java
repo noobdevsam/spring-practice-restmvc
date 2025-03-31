@@ -9,7 +9,6 @@ import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -49,21 +48,4 @@ public class Category {
     )
     private Set<Beer> beers = new HashSet<>();
 
-    @Override
-    public final boolean equals(Object o) {
-        if (!(o instanceof Category category)) return false;
-
-        return Objects.equals(getId(), category.getId()) && Objects.equals(getVersion(), category.getVersion()) && Objects.equals(getDescription(), category.getDescription()) && Objects.equals(getCreatedDate(), category.getCreatedDate()) && Objects.equals(getLastModifiedDate(), category.getLastModifiedDate()) && Objects.equals(getBeers(), category.getBeers());
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hashCode(getId());
-        result = 31 * result + Objects.hashCode(getVersion());
-        result = 31 * result + Objects.hashCode(getDescription());
-        result = 31 * result + Objects.hashCode(getCreatedDate());
-        result = 31 * result + Objects.hashCode(getLastModifiedDate());
-        result = 31 * result + Objects.hashCode(getBeers());
-        return result;
-    }
 }

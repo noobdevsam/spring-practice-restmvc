@@ -8,7 +8,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
 import java.sql.Timestamp;
-import java.util.Objects;
 import java.util.UUID;
 
 @Getter
@@ -48,23 +47,4 @@ public class BeerOrderLine {
         return this.id == null;
     }
 
-    @Override
-    public final boolean equals(Object o) {
-        if (!(o instanceof BeerOrderLine that)) return false;
-
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getVersion(), that.getVersion()) && Objects.equals(getCreatedDate(), that.getCreatedDate()) && Objects.equals(getLastModifiedDate(), that.getLastModifiedDate()) && Objects.equals(getBeer(), that.getBeer()) && Objects.equals(getBeerOrder(), that.getBeerOrder()) && Objects.equals(getOrderQuantity(), that.getOrderQuantity()) && Objects.equals(getQuantityAllocated(), that.getQuantityAllocated());
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hashCode(getId());
-        result = 31 * result + Objects.hashCode(getVersion());
-        result = 31 * result + Objects.hashCode(getCreatedDate());
-        result = 31 * result + Objects.hashCode(getLastModifiedDate());
-        result = 31 * result + Objects.hashCode(getBeer());
-        result = 31 * result + Objects.hashCode(getBeerOrder());
-        result = 31 * result + Objects.hashCode(getOrderQuantity());
-        result = 31 * result + Objects.hashCode(getQuantityAllocated());
-        return result;
-    }
 }

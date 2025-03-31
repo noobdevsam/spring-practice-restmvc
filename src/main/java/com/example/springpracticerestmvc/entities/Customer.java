@@ -9,7 +9,6 @@ import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -42,33 +41,5 @@ public class Customer {
     @Builder.Default
     @OneToMany(mappedBy = "customer")
     private Set<BeerOrder> beerOrders = new HashSet<>();
-
-    @Builder
-    public Customer(String name,
-                    LocalDateTime createdDate,
-                    LocalDateTime updateDate) {
-        this.name = name;
-        this.createdDate = createdDate;
-        this.updateDate = updateDate;
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-        if (!(o instanceof Customer customer)) return false;
-
-        return Objects.equals(getId(), customer.getId()) && Objects.equals(getName(), customer.getName()) && Objects.equals(getEmail(), customer.getEmail()) && Objects.equals(getVersion(), customer.getVersion()) && Objects.equals(getCreatedDate(), customer.getCreatedDate()) && Objects.equals(getUpdateDate(), customer.getUpdateDate()) && Objects.equals(getBeerOrders(), customer.getBeerOrders());
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hashCode(getId());
-        result = 31 * result + Objects.hashCode(getName());
-        result = 31 * result + Objects.hashCode(getEmail());
-        result = 31 * result + Objects.hashCode(getVersion());
-        result = 31 * result + Objects.hashCode(getCreatedDate());
-        result = 31 * result + Objects.hashCode(getUpdateDate());
-        result = 31 * result + Objects.hashCode(getBeerOrders());
-        return result;
-    }
 
 }

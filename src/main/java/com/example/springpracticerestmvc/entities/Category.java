@@ -1,9 +1,7 @@
 package com.example.springpracticerestmvc.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -15,10 +13,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+@Builder
 @Entity
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class Category {
 
     @Id
@@ -40,6 +40,7 @@ public class Category {
     @UpdateTimestamp
     private LocalDateTime lastModifiedDate;
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(
             name = "beer_category",

@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+@Builder
 @Entity
 @Getter
 @Setter
@@ -64,6 +65,7 @@ public class Beer {
     @OneToMany(mappedBy = "beer")
     private Set<BeerOrderLine> beerOrderLines = new HashSet<>();
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(
             name = "beer_category",
@@ -87,6 +89,16 @@ public class Beer {
         this.price = price;
         this.createdDate = createdDate;
         this.updateDate = updateDate;
+    }
+
+    public void addCategory(Category category) {
+        this.categories.add(category);
+        category.getBeers().add(this);
+    }
+
+    public void removeCategory(Category category) {
+        this.categories.remove(category);
+        category.getBeers().remove(this);
     }
 
     @Override

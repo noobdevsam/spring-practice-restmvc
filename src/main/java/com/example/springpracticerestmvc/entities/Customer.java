@@ -11,7 +11,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -27,7 +29,6 @@ public class Customer {
     private UUID id;
     private String name;
 
-    @Column(length = 255)
     private String email;
 
     @Version
@@ -38,6 +39,9 @@ public class Customer {
 
     @UpdateTimestamp
     private LocalDateTime updateDate;
+
+    @OneToMany(mappedBy = "customer")
+    private Set<BeerOrder> beerOrders = new HashSet<>();
 
     @Builder
     public Customer(String name,

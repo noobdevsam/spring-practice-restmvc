@@ -46,8 +46,8 @@ public class BeerOrder {
     @OneToMany(mappedBy = "beerOrder")
     private Set<BeerOrderLine> beerOrderLines = new HashSet<>();
 
-    @OneToOne
-    private BeerOrderShipment beerOrderShpment;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private BeerOrderShipment beerOrderShipment;
 
     public BeerOrder(UUID id,
                      Long version,
@@ -56,7 +56,7 @@ public class BeerOrder {
                      String customerRef,
                      Customer customer,
                      Set<BeerOrderLine> beerOrderLines,
-                     BeerOrderShipment beerOrderShpment) {
+                     BeerOrderShipment beerOrderShipment) {
         this.id = id;
         this.version = version;
         this.createdDate = createdDate;
@@ -64,12 +64,17 @@ public class BeerOrder {
         this.customerRef = customerRef;
         this.setCustomer(customer);
         this.beerOrderLines = beerOrderLines;
-        this.beerOrderShpment = beerOrderShpment;
+        this.setBeerOrderShipment(beerOrderShipment);
     }
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
         customer.getBeerOrders().add(this);
+    }
+
+    public void setBeerOrderShipment(BeerOrderShipment beerOrderShipment) {
+        this.beerOrderShipment = beerOrderShipment;
+        beerOrderShipment.setBeerOrder(this);
     }
 
     public boolean isNew() {

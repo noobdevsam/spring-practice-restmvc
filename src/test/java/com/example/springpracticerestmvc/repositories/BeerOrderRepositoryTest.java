@@ -2,6 +2,7 @@ package com.example.springpracticerestmvc.repositories;
 
 import com.example.springpracticerestmvc.entities.Beer;
 import com.example.springpracticerestmvc.entities.BeerOrder;
+import com.example.springpracticerestmvc.entities.BeerOrderShipment;
 import com.example.springpracticerestmvc.entities.Customer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,16 +34,16 @@ class BeerOrderRepositoryTest {
     @Transactional
     @Test
     void test_beer_order() {
-//        System.out.println(beerOrderRepository.count());
-//        System.out.println(customerRepository.count());
-//        System.out.println(beerRepository.count());
-//        System.out.println(customer.getName());
-//        System.out.println(beer.getBeerName());
 
         var saved_beer_order = beerOrderRepository.save(
                 BeerOrder.builder()
                         .customerRef("Test order")
                         .customer(customer)
+                        .beerOrderShipment(
+                                BeerOrderShipment.builder()
+                                        .trackingNumber("123456789")
+                                        .build()
+                        )
                         .build()
         );
 

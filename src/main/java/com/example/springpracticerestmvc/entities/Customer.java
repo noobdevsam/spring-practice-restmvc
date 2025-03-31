@@ -1,10 +1,7 @@
 package com.example.springpracticerestmvc.entities;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -19,7 +16,9 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Customer {
 
     @Id
@@ -40,6 +39,7 @@ public class Customer {
     @UpdateTimestamp
     private LocalDateTime updateDate;
 
+    @Builder.Default
     @OneToMany(mappedBy = "customer")
     private Set<BeerOrder> beerOrders = new HashSet<>();
 

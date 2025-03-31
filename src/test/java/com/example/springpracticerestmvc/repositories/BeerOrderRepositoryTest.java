@@ -39,7 +39,7 @@ class BeerOrderRepositoryTest {
 //        System.out.println(customer.getName());
 //        System.out.println(beer.getBeerName());
 
-        var saved_beer_order = beerOrderRepository.saveAndFlush(
+        var saved_beer_order = beerOrderRepository.save(
                 BeerOrder.builder()
                         .customerRef("Test order")
                         .customer(customer)

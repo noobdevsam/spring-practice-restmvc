@@ -64,6 +64,14 @@ public class Beer {
     @OneToMany(mappedBy = "beer")
     private Set<BeerOrderLine> beerOrderLines = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "beer_category",
+            joinColumns = @JoinColumn(name = "beer_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories = new HashSet<>();
+
     @Builder
     public Beer(String beerName,
                 BeerStyle beerStyle,
@@ -85,7 +93,7 @@ public class Beer {
     public final boolean equals(Object o) {
         if (!(o instanceof Beer beer)) return false;
 
-        return Objects.equals(getId(), beer.getId()) && Objects.equals(getVersion(), beer.getVersion()) && Objects.equals(getBeerName(), beer.getBeerName()) && getBeerStyle() == beer.getBeerStyle() && Objects.equals(getUpc(), beer.getUpc()) && Objects.equals(getQuantityOnHand(), beer.getQuantityOnHand()) && Objects.equals(getPrice(), beer.getPrice()) && Objects.equals(getCreatedDate(), beer.getCreatedDate()) && Objects.equals(getUpdateDate(), beer.getUpdateDate());
+        return Objects.equals(getId(), beer.getId()) && Objects.equals(getVersion(), beer.getVersion()) && Objects.equals(getBeerName(), beer.getBeerName()) && getBeerStyle() == beer.getBeerStyle() && Objects.equals(getUpc(), beer.getUpc()) && Objects.equals(getQuantityOnHand(), beer.getQuantityOnHand()) && Objects.equals(getPrice(), beer.getPrice()) && Objects.equals(getCreatedDate(), beer.getCreatedDate()) && Objects.equals(getUpdateDate(), beer.getUpdateDate()) && Objects.equals(getBeerOrderLines(), beer.getBeerOrderLines()) && Objects.equals(getCategories(), beer.getCategories());
     }
 
     @Override
@@ -99,7 +107,8 @@ public class Beer {
         result = 31 * result + Objects.hashCode(getPrice());
         result = 31 * result + Objects.hashCode(getCreatedDate());
         result = 31 * result + Objects.hashCode(getUpdateDate());
+        result = 31 * result + Objects.hashCode(getBeerOrderLines());
+        result = 31 * result + Objects.hashCode(getCategories());
         return result;
     }
-
 }

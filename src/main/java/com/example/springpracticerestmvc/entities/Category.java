@@ -12,34 +12,40 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@Builder
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Customer {
+@NoArgsConstructor
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(length = 36, updatable = false, nullable = false, columnDefinition = "varchar(36)")
+    @Column(length = 36, nullable = false, updatable = false, columnDefinition = "varchar(36)")
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
-    private String name;
-
-    private String email;
 
     @Version
-    private Integer version;
+    private Long version;
+
+    @Column(length = 50)
+    private String description;
 
     @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdDate;
 
     @UpdateTimestamp
-    private LocalDateTime updateDate;
+    private LocalDateTime lastModifiedDate;
 
     @Builder.Default
-    @OneToMany(mappedBy = "customer")
-    private Set<BeerOrder> beerOrders = new HashSet<>();
+    @ManyToMany
+    @JoinTable(
+            name = "beer_category",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "beer_id")
+    )
+    private Set<Beer> beers = new HashSet<>();
 
 }

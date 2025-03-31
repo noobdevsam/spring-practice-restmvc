@@ -7,39 +7,44 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.sql.Timestamp;
 import java.util.UUID;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Customer {
+@Entity
+public class BeerOrderLine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(length = 36, updatable = false, nullable = false, columnDefinition = "varchar(36)")
     @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(length = 36, columnDefinition = "VARCHAR(36)", updatable = false, nullable = false)
     private UUID id;
-    private String name;
-
-    private String email;
 
     @Version
-    private Integer version;
+    private Long version;
 
     @CreationTimestamp
-    private LocalDateTime createdDate;
+    @Column(updatable = false)
+    private Timestamp createdDate;
 
     @UpdateTimestamp
-    private LocalDateTime updateDate;
+    private Timestamp lastModifiedDate;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "customer")
-    private Set<BeerOrder> beerOrders = new HashSet<>();
+    @ManyToOne
+    private Beer beer;
+
+    @ManyToOne
+    private BeerOrder beerOrder;
+
+    private Integer orderQuantity = 0;
+    private Integer quantityAllocated = 0;
+
+    public boolean isNew() {
+        return this.id == null;
+    }
 
 }

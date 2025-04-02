@@ -110,6 +110,15 @@ public class BeerServiceJpaImpl implements BeerService {
     @Override
     public Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO beerDTO) {
 
+        // for optimistic lock testing
+//        return Optional.of(
+//                beerMapper.beerToBeerDto(
+//                        beerRepository.save(
+//                                beerMapper.beerdtoToBeer(beerDTO)
+//                        )
+//                )
+//        );
+
         AtomicReference<Optional<BeerDTO>> atomicReference = new AtomicReference<>();
 
         beerRepository.findById(beerId).ifPresentOrElse((foundBeer) -> {
@@ -118,6 +127,7 @@ public class BeerServiceJpaImpl implements BeerService {
             foundBeer.setUpc(beerDTO.getUpc());
             foundBeer.setPrice(beerDTO.getPrice());
             foundBeer.setQuantityOnHand(beerDTO.getQuantityOnHand());
+            foundBeer.setVersion(beerDTO.getVersion());
             //beerRepository.save(foundBeer);
             atomicReference.set(Optional.of(
                     beerMapper.beerToBeerDto(beerRepository.save(foundBeer))

@@ -8,6 +8,7 @@ import com.example.springpracticerestmvc.repositories.BeerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,8 +29,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -190,7 +190,7 @@ class BeerControllerIT {
         var beer = beerRepository.findAll().getFirst();
         var beerDTO = beerMapper.beerToBeerDto(beer);
         beerDTO.setId(null);
-        beerDTO.setVersion(null);
+        beerDTO.setVersion(beer.getVersion());
         final String beerName = "updated!";
         beerDTO.setBeerName(beerName);
 
@@ -240,6 +240,43 @@ class BeerControllerIT {
                 .andReturn();
 
         System.out.println(result.getResponse().getContentAsString());
+    }
+
+    // transaction lock demo
+    @Disabled
+    @Test
+    void test_update_beer_bad_version() throws Exception {
+        var beer = beerRepository.findAll().getFirst();
+        var beerDTO = beerMapper.beerToBeerDto(beer);
+
+        beerDTO.setBeerName("Updated name");
+
+        var result = mockMvc.perform(
+                        put(BeerController.BEER_PATH_ID, beer.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(beerDTO)
+                                )
+                )
+                .andExpect(status().isNoContent())
+                .andReturn();
+
+        System.out.println(result.getResponse().getContentAsString());
+
+        // Simulate a concurrent update with a different version
+        beerDTO.setBeerName("Updated name again");
+
+        var result_second = mockMvc.perform(
+                        put(BeerController.BEER_PATH_ID, beer.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(beerDTO)
+                                )
+                )
+                .andExpect(status().isNoContent())
+                .andReturn();
+
+        System.out.println(result_second.getResponse().getStatus());
     }
 }
 

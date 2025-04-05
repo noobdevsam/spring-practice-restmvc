@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
-@Profile("jpa")
+@Profile({"localdb", "jpa"})
 @Primary
 @RequiredArgsConstructor
 public class CustomerServiceJpaImpl implements CustomerService {

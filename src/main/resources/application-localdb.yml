@@ -28,6 +28,9 @@ spring:
                 elideSetAutoCommits: true
                 maintainTimeStats: false
 
+bootstrap:
+    csv-file-path: classpath:csvdata/beers.csv
+
 logging:
     level:
         org:

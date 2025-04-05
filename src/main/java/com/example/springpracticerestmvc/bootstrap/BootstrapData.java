@@ -9,6 +9,7 @@ import com.example.springpracticerestmvc.repositories.CustomerRepository;
 import com.example.springpracticerestmvc.services.BeerCsvService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,18 +30,24 @@ public class BootstrapData implements CommandLineRunner {
     private final CustomerRepository customerRepository;
     private final BeerCsvService beerCsvService;
 
+    @Value("${bootstrap.csv-file-path}")
+    String beerCsvFilePath;
+
     @Transactional
     @Override
     public void run(String... args) throws Exception {
+
+        assert beerCsvFilePath != null;
+
         loadBeerData();
-        loadCsvData();
+        loadCsvData(beerCsvFilePath);
         loadCustomerData();
     }
 
-    private void loadCsvData() throws FileNotFoundException {
+    private void loadCsvData(String beerCsvFilePath) throws FileNotFoundException {
 
         if (beerRepository.count() < 10) {
-            File file = ResourceUtils.getFile("classpath:csvdata/beers.csv");
+            File file = ResourceUtils.getFile(beerCsvFilePath);
             List<BeerCSVRecord> csvRecords = beerCsvService.convertCSV(file);
 
             csvRecords.forEach(beerCSVRecord -> {

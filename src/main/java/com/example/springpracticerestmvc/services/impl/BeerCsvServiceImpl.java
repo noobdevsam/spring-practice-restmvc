@@ -3,6 +3,8 @@ package com.example.springpracticerestmvc.services.impl;
 import com.example.springpracticerestmvc.model.BeerCSVRecord;
 import com.example.springpracticerestmvc.services.BeerCsvService;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -11,6 +13,8 @@ import java.io.FileReader;
 import java.util.List;
 
 @Service
+@Profile({"localdb", "jpa"})
+@Primary
 public class BeerCsvServiceImpl implements BeerCsvService {
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.springpracticerestmvc.controllers;
 
+import com.example.springpracticerestmvc.config.SecConfig;
 import com.example.springpracticerestmvc.model.CustomerDTO;
 import com.example.springpracticerestmvc.services.CustomerService;
 import com.example.springpracticerestmvc.services.impl.CustomerServiceImpl;
@@ -10,6 +11,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,8 +30,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CustomerController.class)
+@Import(SecConfig.class)
 public class CustomerControllerTest {
-    
+
     @Autowired
     MockMvc mockMvc;
 
@@ -54,7 +57,7 @@ public class CustomerControllerTest {
     }
 
     @Test
-    void test_get_by_id() throws Exception{
+    void test_get_by_id() throws Exception {
         var customer = customerServiceImpl.getAllCustomers().getFirst();
 
         given(customerService.getCustomerById(customer.getId())).willReturn(
@@ -63,20 +66,20 @@ public class CustomerControllerTest {
 
         mockMvc.perform(
                         get(CustomerController.CUSTOMER_PATH_ID, customer.getId()).accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.name", is(customer.getName())));
+                ).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name", is(customer.getName())));
     }
 
     @Test
-    void test_list_all_customers() throws Exception{
+    void test_list_all_customers() throws Exception {
         given(customerService.getAllCustomers()).willReturn(customerServiceImpl.getAllCustomers());
 
         mockMvc.perform(
                         get(CustomerController.CUSTOMER_PATH).accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.length()", is(3)));
+                ).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()", is(3)));
     }
 
     @Test

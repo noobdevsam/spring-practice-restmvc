@@ -1,5 +1,6 @@
 package com.example.springpracticerestmvc.controllers;
 
+import com.example.springpracticerestmvc.bootstrap.BootstrapData;
 import com.example.springpracticerestmvc.config.SecConfig;
 import com.example.springpracticerestmvc.exceptions.NotFoundException;
 import com.example.springpracticerestmvc.mappers.CustomerMapper;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @ActiveProfiles("localdb")
-@Import(SecConfig.class)
+@Import({SecConfig.class, BootstrapData.class})
 class CustomerControllerIT {
 
     @Autowired

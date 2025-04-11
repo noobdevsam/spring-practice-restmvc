@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
@@ -24,6 +25,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Profile({"localdb", "default"})
 public class BootstrapData implements CommandLineRunner {
 
     private final BeerRepository beerRepository;

@@ -24,6 +24,9 @@ spring:
         user:
             password: password
 
+bootstrap:
+    csv-file-path: classpath:csvdata/beers.csv
+
 # enable 'localdb' profile in application.properties
 # or in run configuration for intellij idea ultimate
 #   1. disable non integration tests

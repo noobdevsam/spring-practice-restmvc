@@ -12,6 +12,9 @@ public class SecConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .authorizeHttpRequests(
+                        auth -> auth.anyRequest().authenticated()
+                )
                 .csrf(
                         csrf -> csrf.ignoringRequestMatchers("/api/**")
                 )

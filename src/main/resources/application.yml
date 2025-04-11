@@ -22,8 +22,7 @@ spring:
         enabled: false
     security:
         user:
-            name: ${SEC_UNAME}
-            password: ${SEC_PASS}
+            password: password
 
 # enable 'localdb' profile in application.properties
 # or in run configuration for intellij idea ultimate
@@ -34,6 +33,6 @@ logging:
     level:
         com:
             example: debug
-        org:
-            springframework:
-                security: trace
+#        org:
+#            springframework:
+#                security: trace

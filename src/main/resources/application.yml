@@ -3,16 +3,16 @@ spring:
         name: SpringPracticeRESTMVC
     jpa:
         show-sql: true
-#        to generate database schema automatically, uncomment the properties bellow
-#        properties:
-#            jakarta:
-#                persistence:
-#                    schema-generation:
-#                        scripts:
-#                            action: drop-and-create
-#                            create-source: metadata
-#                            drop-target: drop-and-create.sql
-#                            create-target: drop-and-create.sql
+    #        to generate database schema automatically, uncomment the properties bellow
+    #        properties:
+    #            jakarta:
+    #                persistence:
+    #                    schema-generation:
+    #                        scripts:
+    #                            action: drop-and-create
+    #                            create-source: metadata
+    #                            drop-target: drop-and-create.sql
+    #                            create-target: drop-and-create.sql
     h2:
         console:
             enabled: true
@@ -20,6 +20,12 @@ spring:
         url: jdbc:h2:mem:testdb
     flyway:
         enabled: false
+    security:
+        user:
+            password: password
+
+bootstrap:
+    csv-file-path: classpath:csvdata/beers.csv
 
 # enable 'localdb' profile in application.properties
 # or in run configuration for intellij idea ultimate
@@ -30,3 +36,6 @@ logging:
     level:
         com:
             example: debug
+#        org:
+#            springframework:
+#                security: trace

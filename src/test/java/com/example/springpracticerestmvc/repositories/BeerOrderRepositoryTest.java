@@ -1,5 +1,7 @@
 package com.example.springpracticerestmvc.repositories;
 
+import com.example.springpracticerestmvc.bootstrap.BootstrapData;
+import com.example.springpracticerestmvc.config.SecConfig;
 import com.example.springpracticerestmvc.entities.Beer;
 import com.example.springpracticerestmvc.entities.BeerOrder;
 import com.example.springpracticerestmvc.entities.BeerOrderShipment;
@@ -8,9 +10,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Import({SecConfig.class, BootstrapData.class})
 class BeerOrderRepositoryTest {
 
     @Autowired

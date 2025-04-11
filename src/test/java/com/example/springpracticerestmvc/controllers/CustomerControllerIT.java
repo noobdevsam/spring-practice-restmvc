@@ -1,5 +1,7 @@
 package com.example.springpracticerestmvc.controllers;
 
+import com.example.springpracticerestmvc.bootstrap.BootstrapData;
+import com.example.springpracticerestmvc.config.SecConfig;
 import com.example.springpracticerestmvc.exceptions.NotFoundException;
 import com.example.springpracticerestmvc.mappers.CustomerMapper;
 import com.example.springpracticerestmvc.model.CustomerDTO;
@@ -7,6 +9,7 @@ import com.example.springpracticerestmvc.repositories.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
@@ -18,7 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@ActiveProfiles("jpa")
+@ActiveProfiles("localdb")
+@Import({SecConfig.class, BootstrapData.class})
 class CustomerControllerIT {
 
     @Autowired

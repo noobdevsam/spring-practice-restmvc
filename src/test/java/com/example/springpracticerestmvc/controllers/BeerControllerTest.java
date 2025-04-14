@@ -17,6 +17,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -169,7 +171,14 @@ class BeerControllerTest {
 
         mockMvc.perform(
                 patch(BeerController.BEER_PATH_ID, beer.getId())
-                        .with(httpBasic(USERNAME, PASSWORD)) // for authentication
+                        .with(
+                                jwt().jwt(jwt -> {
+                                    jwt.subject("messaging-client");
+                                    jwt.claim("scope", "message-read");
+                                    jwt.claim("scope", "message-write");
+                                    jwt.notBefore(Instant.now().minusSeconds(51));
+                                })
+                        )
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerMap))

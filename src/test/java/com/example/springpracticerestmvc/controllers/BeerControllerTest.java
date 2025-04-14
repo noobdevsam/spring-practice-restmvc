@@ -46,8 +46,6 @@ class BeerControllerTest {
                         jwt.claim("scope", "message-write");
                         jwt.notBefore(Instant.now().minusSeconds(51));
                     });
-    public static final String USERNAME = "user";
-    public static final String PASSWORD = "password";
 
     @Autowired
     MockMvc mockMvc;

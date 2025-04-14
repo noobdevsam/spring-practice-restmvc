@@ -15,11 +15,8 @@ public class SecConfig {
                 .authorizeHttpRequests(
                         auth -> auth.anyRequest().authenticated()
                 )
-                .csrf(
-                        csrf -> csrf.ignoringRequestMatchers("/api/**")
-                )
-                .httpBasic(
-                        Customizer.withDefaults()
+                .oauth2ResourceServer(
+                        serverConfig -> serverConfig.jwt(Customizer.withDefaults())
                 )
                 .build();
     }

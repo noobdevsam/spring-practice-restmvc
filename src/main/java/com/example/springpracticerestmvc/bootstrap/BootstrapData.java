@@ -39,7 +39,10 @@ public class BootstrapData implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        assert beerCsvFilePath != null;
+//        assert beerCsvFilePath != null;
+        if (beerCsvFilePath == null) {
+            beerCsvFilePath = "classpath:csvdata/beers.csv";
+        }
 
         loadBeerData();
         loadCsvData(beerCsvFilePath);

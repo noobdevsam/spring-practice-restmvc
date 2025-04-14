@@ -15,12 +15,14 @@ public class SecConfig {
                 .authorizeHttpRequests(
                         auth -> auth.anyRequest().authenticated()
                 )
-                .csrf(
-                        csrf -> csrf.ignoringRequestMatchers("/api/**")
-                )
-                .httpBasic(
-                        Customizer.withDefaults()
+                .oauth2ResourceServer(
+                        serverConfig -> serverConfig.jwt(Customizer.withDefaults())
                 )
                 .build();
     }
 }
+
+// Test the authorization with Postman for the following endpoint:
+// GET http://localhost:8080/api/v1/beer
+// Set http://localhost:9000/oauth2/token as OAuth2 token url when requesting the token
+// and add OAuth data to request header when using Postman

@@ -13,7 +13,7 @@ import java.io.FileReader;
 import java.util.List;
 
 @Service
-@Profile({"localdb", "jpa", "default"})
+@Profile({"localdb", "default"})
 @Primary
 public class BeerCsvServiceImpl implements BeerCsvService {
 

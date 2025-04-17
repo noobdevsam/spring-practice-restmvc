@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
 @Mapper
-@Profile({"localdb", "jpa"})
+@Profile({"localdb", "default"})
 @Primary
 public interface BeerMapper {
 

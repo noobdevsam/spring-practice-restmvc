@@ -21,7 +21,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
-@Profile({"localdb", "jpa"})
+@Profile({"localdb"})
 @Primary
 @RequiredArgsConstructor
 public class BeerServiceJpaImpl implements BeerService {

@@ -1,6 +1,9 @@
 spring:
     application:
         name: SpringPracticeRESTMVC
+    threads:
+        virtual:
+            enabled: true
     jpa:
         show-sql: true
     #        to generate database schema automatically, uncomment the properties bellow
@@ -31,10 +34,13 @@ spring:
 bootstrap:
     csv-file-path: classpath:csvdata/beers.csv
 
+server:
+    port: 9090
+
 # enable 'localdb' profile in application.properties
 # or in run configuration for intellij idea ultimate
 #   1. disable non integration tests
-#   2. use @ActiveProfiles("jpa") in integration test classes
+#   2. use @ActiveProfiles("localdb") in integration test classes
 
 logging:
     level:

@@ -35,7 +35,7 @@ bootstrap:
     csv-file-path: classpath:csvdata/beers.csv
 
 server:
-    port: 9090
+    port: 8081
 
 # enable 'localdb' profile in application.properties
 # or in run configuration for intellij idea ultimate

@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
-@Mapper
+@Mapper(componentModel = "spring")
 @Profile({"localdb", "default"})
 @Primary
 public interface CustomerMapper {

@@ -30,6 +30,7 @@
         <java.version>24</java.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <spring-boot.run.profiles>localdb</spring-boot.run.profiles>
+        <jwt-uri>http://example.com:9000</jwt-uri>
     </properties>
     <dependencies>
         <dependency>

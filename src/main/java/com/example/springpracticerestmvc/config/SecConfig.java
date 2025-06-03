@@ -13,7 +13,11 @@ public class SecConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(
-                        auth -> auth.anyRequest().authenticated()
+                        auth -> {
+                            auth
+                                    .requestMatchers("/v3/api-docs**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                                    .anyRequest().authenticated();
+                        }
                 )
                 .oauth2ResourceServer(
                         serverConfig -> serverConfig.jwt(Customizer.withDefaults())

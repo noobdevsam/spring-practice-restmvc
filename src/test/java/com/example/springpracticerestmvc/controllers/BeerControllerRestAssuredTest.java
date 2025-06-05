@@ -1,5 +1,7 @@
 package com.example.springpracticerestmvc.controllers;
 
+import com.atlassian.oai.validator.OpenApiInteractionValidator;
+import com.atlassian.oai.validator.restassured.OpenApiValidationFilter;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +25,11 @@ public class BeerControllerRestAssuredTest {
     @LocalServerPort
     Integer localPort;
 
+    OpenApiValidationFilter filter = new OpenApiValidationFilter(
+            OpenApiInteractionValidator.createForSpecificationUrl("openapi3.yml")
+                    .build()
+    );
+
     @BeforeEach
     void setUp() {
         RestAssured.baseURI = "http://localhost";
@@ -34,6 +41,7 @@ public class BeerControllerRestAssuredTest {
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .when()
+                .filter(filter)
                 .get("/api/v1/beer")
                 .then()
                 .assertThat().statusCode(200);

@@ -32,7 +32,6 @@ public class SecConfig {
         return http
                 .authorizeHttpRequests(
                         auth -> {
-                            //auth.requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll(); // for actuator health endpoint
                             auth
                                     .requestMatchers("/v3/api-docs**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                                     .anyRequest().authenticated();

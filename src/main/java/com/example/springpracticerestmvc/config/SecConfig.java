@@ -13,19 +13,44 @@ import org.springframework.security.web.SecurityFilterChain;
 @Profile("!test") // Exclude this configuration in test profile
 public class SecConfig {
 
+    /**
+     * Configures a security filter chain specifically for Spring Boot Actuator endpoints.
+     * <p>
+     * This filter chain matches any Actuator endpoint using `EndpointRequest.toAnyEndpoint()`
+     * and permits all requests to these endpoints without requiring authentication.
+     * <p>
+     * This configuration is useful for allowing unrestricted access to Actuator endpoints,
+     * which are typically used for monitoring and management purposes.
+     *
+     * @param http the HttpSecurity object used to configure security settings
+     * @return a SecurityFilterChain that permits all requests to Actuator endpoints
+     * @throws Exception if an error occurs while building the security configuration
+     */
     @Bean
     @Order(1)
     public SecurityFilterChain actuatorSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .securityMatcher(
-                        EndpointRequest.toAnyEndpoint()
+                        EndpointRequest.toAnyEndpoint() // Matches any Actuator endpoint
                 )
                 .authorizeHttpRequests(
-                        auth -> auth.anyRequest().permitAll()
+                        auth -> auth.anyRequest().permitAll() // Permits all requests to matched endpoints
                 )
                 .build();
     }
 
+    /**
+     * Configures the main security filter chain for the application.
+     * <p>
+     * This filter chain:
+     * - Permits unauthenticated access to API documentation and Swagger UI endpoints.
+     * - Requires authentication for all other requests.
+     * - Configures the application to use JWT-based authentication for OAuth2 resource server.
+     *
+     * @param http the HttpSecurity object used to configure security settings
+     * @return a SecurityFilterChain that enforces the specified security rules
+     * @throws Exception if an error occurs while building the security configuration
+     */
     @Bean
     @Order(2)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -33,12 +58,12 @@ public class SecConfig {
                 .authorizeHttpRequests(
                         auth -> {
                             auth
-                                    .requestMatchers("/v3/api-docs**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                                    .anyRequest().authenticated();
+                                    .requestMatchers("/v3/api-docs**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Allow public access to API docs and Swagger UI
+                                    .anyRequest().authenticated(); // Require authentication for all other requests
                         }
                 )
                 .oauth2ResourceServer(
-                        serverConfig -> serverConfig.jwt(Customizer.withDefaults())
+                        serverConfig -> serverConfig.jwt(Customizer.withDefaults()) // Enable JWT-based authentication for OAuth2 resource server
                 )
                 .build();
     }

@@ -31,6 +31,17 @@ spring:
                 jwt:
                     issuer-uri: http://localhost:9000
 
+management:
+    endpoint:
+        health:
+            probes:
+                enabled: true
+    health:
+        livenessstate:
+            enabled: true # /actuator/health/liveness
+        readinessstate:
+            enabled: true # /actuator/health/readiness
+
 bootstrap:
     csv-file-path: classpath:csvdata/beers.csv
 

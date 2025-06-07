@@ -1,5 +1,6 @@
 package com.example.springpracticerestmvc.config;
 
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -11,11 +12,25 @@ import org.springframework.security.web.SecurityFilterChain;
 @Profile("!test") // Exclude this configuration in test profile
 public class SecConfig {
 
+//    @Bean
+//    @Order(1)
+//    public SecurityFilterChain actuatorSecurityFilterChain(HttpSecurity http) throws Exception {
+//        return http
+//                .authorizeHttpRequests(
+//                        auth -> auth.requestMatchers(
+//                                EndpointRequest.toAnyEndpoint()
+//                        ).permitAll()
+//                )
+//                .build();
+//    }
+
     @Bean
+//    @Order(2)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(
                         auth -> {
+                            auth.requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll(); // for actuator health endpoint
                             auth
                                     .requestMatchers("/v3/api-docs**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                                     .anyRequest().authenticated();

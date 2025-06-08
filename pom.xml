@@ -32,6 +32,7 @@
         <spring-boot.run.profiles>localdb</spring-boot.run.profiles>
         <jwt-uri>http://example.com:9000</jwt-uri>
         <springdoc.openapi.version>2.8.8</springdoc.openapi.version>
+        <logbook.version>3.9.0</logbook.version>
     </properties>
     <dependencies>
         <dependency>
@@ -112,6 +113,12 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-common</artifactId>
             <version>${springdoc.openapi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>logbook-spring-boot-starter</artifactId>
+            <version>${logbook.version}</version>
         </dependency>
 
         <dependency>

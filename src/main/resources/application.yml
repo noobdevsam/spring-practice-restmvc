@@ -57,6 +57,9 @@ logging:
     level:
         com:
             example: debug
+        org:
+            zalando:
+                logbook: trace
 #        org:
 #            springframework:
 #                security: trace

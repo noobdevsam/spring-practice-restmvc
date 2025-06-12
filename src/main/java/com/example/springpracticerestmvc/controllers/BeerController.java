@@ -18,10 +18,10 @@ import java.util.UUID;
 @SuppressWarnings("rawtypes")
 public class BeerController {
 
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(BeerController.class);
-    private final BeerService beerService;
     public static final String BEER_PATH = "/api/v1/beer";
     public static final String BEER_PATH_ID = BEER_PATH + "/{beerId}";
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(BeerController.class);
+    private final BeerService beerService;
 
     public BeerController(BeerService beerService) {
         this.beerService = beerService;
@@ -58,7 +58,7 @@ public class BeerController {
     }
 
     @PutMapping(BEER_PATH_ID)
-    public ResponseEntity updateBeerById(@PathVariable("beerId") UUID beerId,@Validated @RequestBody BeerDTO beerDTO) {
+    public ResponseEntity updateBeerById(@PathVariable("beerId") UUID beerId, @Validated @RequestBody BeerDTO beerDTO) {
         // beerService.updateBeerById(beerId, beerDTO);
         if (beerService.updateBeerById(beerId, beerDTO).isEmpty()) {
             throw new NotFoundException();

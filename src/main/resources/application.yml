@@ -31,7 +31,7 @@ spring:
                 jwt:
                     issuer-uri: http://localhost:9000
     cache:
-        cache-names: beerCache
+        cache-names: beerCache, beerListCache
 
 management:
     endpoint:

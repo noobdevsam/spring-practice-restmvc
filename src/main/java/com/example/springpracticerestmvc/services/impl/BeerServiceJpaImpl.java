@@ -7,6 +7,8 @@ import com.example.springpracticerestmvc.model.BeerStyle;
 import com.example.springpracticerestmvc.repositories.BeerRepository;
 import com.example.springpracticerestmvc.services.BeerService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Profile({"localdb"})
 @Primary
 @RequiredArgsConstructor
+@Slf4j
 public class BeerServiceJpaImpl implements BeerService {
 
     private static final int DEFAULT_PAGE = 0;
@@ -93,8 +96,12 @@ public class BeerServiceJpaImpl implements BeerService {
         return beerRepository.findAllByBeerNameIsLikeIgnoreCase("%" + beerName + "%", pageable);
     }
 
+    @Cacheable(cacheNames = "beerCache", key = "#beerId")
     @Override
     public Optional<BeerDTO> getBeerById(UUID beerId) {
+
+        log.info("Get beer by id - in JPA Service");
+
         return Optional.ofNullable(
                 beerMapper.beerToBeerDto(beerRepository.findById(beerId).orElse(null))
         );

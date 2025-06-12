@@ -34,8 +34,11 @@ public class BeerServiceJpaImpl implements BeerService {
     private final BeerRepository beerRepository;
     private final BeerMapper beerMapper;
 
+    @Cacheable(cacheNames = "beerListCache")
     @Override
     public Page<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, Boolean showInventory, Integer pageNumber, Integer pageSize) {
+
+        log.info("List beers - in JPA Service");
 
         Page<Beer> beerPage;
         PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);

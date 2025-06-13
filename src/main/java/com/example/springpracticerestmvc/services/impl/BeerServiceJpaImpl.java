@@ -8,7 +8,9 @@ import com.example.springpracticerestmvc.repositories.BeerRepository;
 import com.example.springpracticerestmvc.services.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
@@ -147,6 +149,11 @@ public class BeerServiceJpaImpl implements BeerService {
         return atomicReference.get();
     }
 
+    // does not work
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "beerCache", key = "#beerId"),
+            @CacheEvict(cacheNames = "beerListCache")
+    })
     @Override
     public Boolean deleteById(UUID beerId) {
         if (beerRepository.existsById(beerId)) {

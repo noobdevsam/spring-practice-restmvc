@@ -5,6 +5,8 @@ import com.example.springpracticerestmvc.model.CustomerDTO;
 import com.example.springpracticerestmvc.repositories.CustomerRepository;
 import com.example.springpracticerestmvc.services.CustomerService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -20,21 +22,30 @@ import java.util.stream.Collectors;
 @Profile({"localdb"})
 @Primary
 @RequiredArgsConstructor
+@Slf4j
 public class CustomerServiceJpaImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
 
+    @Cacheable(cacheNames = "customerListCache")
     @Override
     public List<CustomerDTO> getAllCustomers() {
+
+        log.info("in service - get all customers");
+
         return customerRepository.findAll()
                 .stream()
                 .map(customerMapper::customerToCustomerDto)
                 .collect(Collectors.toList());
     }
 
+    @Cacheable(cacheNames = "customerCache", key = "#id")
     @Override
     public Optional<CustomerDTO> getCustomerById(UUID id) {
+
+        log.info("in service - get customer by id");
+
         return Optional.ofNullable(customerMapper.customerToCustomerDto(
                 customerRepository.findById(id).orElse(null)
         ));

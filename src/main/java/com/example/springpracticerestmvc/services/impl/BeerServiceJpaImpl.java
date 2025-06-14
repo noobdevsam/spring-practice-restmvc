@@ -102,8 +102,14 @@ public class BeerServiceJpaImpl implements BeerService {
     }
 
     private void clearCache(UUID beerId) {
-        cacheManager.getCache("beerCache").evict(beerId);
-        cacheManager.getCache("beerListCache").clear();
+
+        if (cacheManager.getCache("beerCache") != null) {
+            cacheManager.getCache("beerCache").evict(beerId);
+        }
+
+        if (cacheManager.getCache("beerListCache") != null) {
+            cacheManager.getCache("beerListCache").clear();
+        }
     }
 
     @Cacheable(cacheNames = "beerCache", key = "#beerId")
@@ -122,7 +128,9 @@ public class BeerServiceJpaImpl implements BeerService {
     @Override
     public BeerDTO saveNewBeer(BeerDTO beerDTO) {
 
-        cacheManager.getCache("beerListCache").clear();
+        if (cacheManager.getCache("beerListCache") != null) {
+            cacheManager.getCache("beerListCache").clear();
+        }
 
         return beerMapper.beerToBeerDto(
                 beerRepository.save(beerMapper.beerdtoToBeer(beerDTO))

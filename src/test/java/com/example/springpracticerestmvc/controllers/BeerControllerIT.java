@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -290,6 +291,26 @@ class BeerControllerIT {
                 .andReturn();
 
         System.out.println(result_second.getResponse().getStatus());
+    }
+
+    @Test
+    void test_created_beer_mvc() throws Exception {
+        var beerDTO = new BeerDTO();
+        beerDTO.setBeerName("New beer name");
+        beerDTO.setBeerStyle(BeerStyle.IPA);
+        beerDTO.setUpc("13213");
+        beerDTO.setPrice(new BigDecimal("12.99"));
+        beerDTO.setQuantityOnHand(100);
+
+        mockMvc.perform(
+                        post(BeerController.BEER_PATH)
+                                .with(BeerControllerTest.jwtRequestPostProcessor)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(beerDTO))
+                )
+                .andExpect(status().isCreated())
+                .andReturn();
     }
 }
 

@@ -1,6 +1,7 @@
 package com.example.springpracticerestmvc.controllers;
 
 import com.example.springpracticerestmvc.config.SecConfig;
+import com.example.springpracticerestmvc.events.BeerCreatedEvent;
 import com.example.springpracticerestmvc.exceptions.NotFoundException;
 import com.example.springpracticerestmvc.mappers.BeerMapper;
 import com.example.springpracticerestmvc.model.BeerDTO;
@@ -8,6 +9,7 @@ import com.example.springpracticerestmvc.model.BeerStyle;
 import com.example.springpracticerestmvc.repositories.BeerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.core.IsNull;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.event.ApplicationEvents;
+import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -40,7 +44,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("localdb")
 @Import(SecConfig.class)
+@RecordApplicationEvents
 class BeerControllerIT {
+
+    @Autowired
+    ApplicationEvents applicationEvents;
 
     @Autowired
     BeerController beerController;
@@ -311,6 +319,10 @@ class BeerControllerIT {
                 )
                 .andExpect(status().isCreated())
                 .andReturn();
+
+        Assertions.assertEquals(
+                1, applicationEvents.stream(BeerCreatedEvent.class).count()
+        );
     }
 }
 

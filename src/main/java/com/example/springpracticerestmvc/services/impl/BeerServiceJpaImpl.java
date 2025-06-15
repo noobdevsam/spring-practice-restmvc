@@ -1,6 +1,7 @@
 package com.example.springpracticerestmvc.services.impl;
 
 import com.example.springpracticerestmvc.entities.Beer;
+import com.example.springpracticerestmvc.events.BeerCreatedEvent;
 import com.example.springpracticerestmvc.mappers.BeerMapper;
 import com.example.springpracticerestmvc.model.BeerDTO;
 import com.example.springpracticerestmvc.model.BeerStyle;
@@ -8,14 +9,17 @@ import com.example.springpracticerestmvc.repositories.BeerRepository;
 import com.example.springpracticerestmvc.services.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -35,6 +39,7 @@ public class BeerServiceJpaImpl implements BeerService {
     private final BeerRepository beerRepository;
     private final BeerMapper beerMapper;
     private final CacheManager cacheManager;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Cacheable(cacheNames = "beerListCache")
     @Override
@@ -132,8 +137,20 @@ public class BeerServiceJpaImpl implements BeerService {
             cacheManager.getCache("beerListCache").clear();
         }
 
+        val savedBeer = beerRepository.save(beerMapper.beerdtoToBeer(beerDTO));
+
+        // This provides details about the currently authenticated user, such as their username or roles,
+        // which can be used for auditing or event purposes
+        val auth = SecurityContextHolder.getContext().getAuthentication();
+
+        // Publish an event after saving the beer
+        applicationEventPublisher.publishEvent(
+                new BeerCreatedEvent(savedBeer, auth)
+        );
+
+
         return beerMapper.beerToBeerDto(
-                beerRepository.save(beerMapper.beerdtoToBeer(beerDTO))
+                savedBeer
         );
     }
 

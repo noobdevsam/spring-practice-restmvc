@@ -2,6 +2,9 @@ package com.example.springpracticerestmvc.controllers;
 
 import com.example.springpracticerestmvc.config.SecConfig;
 import com.example.springpracticerestmvc.events.BeerCreatedEvent;
+import com.example.springpracticerestmvc.events.BeerDeletedEvent;
+import com.example.springpracticerestmvc.events.BeerPatchedEvent;
+import com.example.springpracticerestmvc.events.BeerUpdatedEvent;
 import com.example.springpracticerestmvc.exceptions.NotFoundException;
 import com.example.springpracticerestmvc.mappers.BeerMapper;
 import com.example.springpracticerestmvc.model.BeerDTO;
@@ -324,5 +327,68 @@ class BeerControllerIT {
                 1, applicationEvents.stream(BeerCreatedEvent.class).count()
         );
     }
+
+    @Test
+    void test_update_beer_mvc() throws Exception {
+        var beer = beerRepository.findAll().getFirst();
+        var beerDTO = beerMapper.beerToBeerDto(beer);
+
+        beerDTO.setBeerName("Updated beer name");
+
+        mockMvc.perform(
+                        put(BeerController.BEER_PATH_ID, beer.getId())
+                                .with(BeerControllerTest.jwtRequestPostProcessor)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(beerDTO))
+                )
+                .andExpect(status().isNoContent())
+                .andReturn();
+
+        Assertions.assertEquals(
+                1, applicationEvents.stream(BeerUpdatedEvent.class).count()
+        );
+    }
+
+    @Test
+    void test_patch_beer_mvc() throws Exception {
+        var beer = beerRepository.findAll().getFirst();
+
+        Map<String, Object> beer_map = new HashMap<>();
+        beer_map.put("beerName", "New Name");
+
+        mockMvc.perform(
+                        patch(BeerController.BEER_PATH_ID, beer.getId())
+                                .with(BeerControllerTest.jwtRequestPostProcessor)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(beer_map))
+                )
+                .andExpect(status().isNoContent())
+                .andReturn();
+
+        Assertions.assertEquals(
+                1, applicationEvents.stream(BeerPatchedEvent.class).count()
+        );
+    }
+
+    @Test
+    void test_delete_beer_id_found() throws Exception {
+        var beer = beerRepository.findAll().getFirst();
+
+        mockMvc.perform(
+                        delete(BeerController.BEER_PATH_ID, beer.getId())
+                                .with(BeerControllerTest.jwtRequestPostProcessor)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isNoContent())
+                .andReturn();
+
+        Assertions.assertEquals(
+                1, applicationEvents.stream(BeerDeletedEvent.class).count()
+        );
+    }
+
 }
 

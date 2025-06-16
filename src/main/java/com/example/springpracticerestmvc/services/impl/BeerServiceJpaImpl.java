@@ -2,6 +2,9 @@ package com.example.springpracticerestmvc.services.impl;
 
 import com.example.springpracticerestmvc.entities.Beer;
 import com.example.springpracticerestmvc.events.BeerCreatedEvent;
+import com.example.springpracticerestmvc.events.BeerDeletedEvent;
+import com.example.springpracticerestmvc.events.BeerPatchedEvent;
+import com.example.springpracticerestmvc.events.BeerUpdatedEvent;
 import com.example.springpracticerestmvc.mappers.BeerMapper;
 import com.example.springpracticerestmvc.model.BeerDTO;
 import com.example.springpracticerestmvc.model.BeerStyle;
@@ -178,8 +181,20 @@ public class BeerServiceJpaImpl implements BeerService {
             foundBeer.setQuantityOnHand(beerDTO.getQuantityOnHand());
             foundBeer.setVersion(beerDTO.getVersion());
             //beerRepository.save(foundBeer);
+
+            val savedBeer = beerRepository.save(foundBeer);
+
+            // This provides details about the currently authenticated user, such as their username or roles,
+            // which can be used for auditing or event purposes
+            val auth = SecurityContextHolder.getContext().getAuthentication();
+
+            // Publish an event after saving the beer
+            applicationEventPublisher.publishEvent(
+                    new BeerUpdatedEvent(savedBeer, auth)
+            );
+
             atomicReference.set(Optional.of(
-                    beerMapper.beerToBeerDto(beerRepository.save(foundBeer))
+                    beerMapper.beerToBeerDto(savedBeer)
             ));
         }, () -> atomicReference.set(Optional.empty()));
 
@@ -192,6 +207,14 @@ public class BeerServiceJpaImpl implements BeerService {
         clearCache(beerId);
 
         if (beerRepository.existsById(beerId)) {
+
+            val auth = SecurityContextHolder.getContext().getAuthentication();
+            applicationEventPublisher.publishEvent(
+                    new BeerDeletedEvent(
+                            Beer.builder().id(beerId).build(), auth
+                    )
+            );
+
             beerRepository.deleteById(beerId);
             return true;
         }
@@ -227,9 +250,16 @@ public class BeerServiceJpaImpl implements BeerService {
                 foundBeer.setQuantityOnHand(beerDTO.getQuantityOnHand());
             }
 
+            val savedBeer = beerRepository.save(foundBeer);
+            val auth = SecurityContextHolder.getContext().getAuthentication();
+
+            applicationEventPublisher.publishEvent(
+                    new BeerPatchedEvent(savedBeer, auth)
+            );
+
             atomicReference.set(Optional.of(
                     beerMapper.beerToBeerDto(
-                            beerRepository.save(foundBeer)
+                            savedBeer
                     )
             ));
         }, () -> atomicReference.set(Optional.empty()));

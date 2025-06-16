@@ -139,10 +139,6 @@ public class BeerServiceJpaImpl implements BeerService {
 
         val savedBeer = beerRepository.save(beerMapper.beerdtoToBeer(beerDTO));
 
-        log.info("Beer saved - in JPA Service");
-        System.out.println("Current thread name = " + Thread.currentThread().getName());
-        System.out.println("Current thread id = " + Thread.currentThread().threadId());
-
         // This provides details about the currently authenticated user, such as their username or roles,
         // which can be used for auditing or event purposes
         val auth = SecurityContextHolder.getContext().getAuthentication();

@@ -2,6 +2,7 @@ package com.example.springpracticerestmvc.controllers;
 
 import com.example.springpracticerestmvc.config.SecConfig;
 import com.example.springpracticerestmvc.events.BeerCreatedEvent;
+import com.example.springpracticerestmvc.events.BeerDeletedEvent;
 import com.example.springpracticerestmvc.events.BeerPatchedEvent;
 import com.example.springpracticerestmvc.events.BeerUpdatedEvent;
 import com.example.springpracticerestmvc.exceptions.NotFoundException;
@@ -370,5 +371,24 @@ class BeerControllerIT {
                 1, applicationEvents.stream(BeerPatchedEvent.class).count()
         );
     }
+
+    @Test
+    void test_delete_beer_id_found() throws Exception {
+        var beer = beerRepository.findAll().getFirst();
+
+        mockMvc.perform(
+                        delete(BeerController.BEER_PATH_ID, beer.getId())
+                                .with(BeerControllerTest.jwtRequestPostProcessor)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isNoContent())
+                .andReturn();
+
+        Assertions.assertEquals(
+                1, applicationEvents.stream(BeerDeletedEvent.class).count()
+        );
+    }
+
 }
 

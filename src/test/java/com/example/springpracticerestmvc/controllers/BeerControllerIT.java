@@ -324,5 +324,23 @@ class BeerControllerIT {
                 1, applicationEvents.stream(BeerCreatedEvent.class).count()
         );
     }
+
+    @Test
+    void test_update_beer_mvc() throws Exception {
+        var beer = beerRepository.findAll().getFirst();
+        var beerDTO = beerMapper.beerToBeerDto(beer);
+
+        beerDTO.setBeerName("Updated beer name");
+
+        mockMvc.perform(
+                        put(BeerController.BEER_PATH_ID, beer.getId())
+                                .with(BeerControllerTest.jwtRequestPostProcessor)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(beerDTO))
+                )
+                .andExpect(status().isNoContent())
+                .andReturn();
+    }
 }
 

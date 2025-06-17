@@ -1,5 +1,6 @@
 package com.example.springpracticerestmvc.model;
 
+import jakarta.validation.constraints.Min;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,7 +18,9 @@ public class BeerOrderLineDTO {
 
     private BeerDTO beer;
 
+    @Min(value = 1, message = "Order quantity must be at least 1")
     private Integer orderQuantity;
+
     private Integer quantityAllocated;
 
 

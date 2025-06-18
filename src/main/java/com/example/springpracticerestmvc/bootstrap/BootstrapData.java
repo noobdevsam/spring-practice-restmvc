@@ -1,13 +1,17 @@
 package com.example.springpracticerestmvc.bootstrap;
 
 import com.example.springpracticerestmvc.entities.Beer;
+import com.example.springpracticerestmvc.entities.BeerOrder;
+import com.example.springpracticerestmvc.entities.BeerOrderLine;
 import com.example.springpracticerestmvc.entities.Customer;
 import com.example.springpracticerestmvc.model.BeerCSVRecord;
 import com.example.springpracticerestmvc.model.BeerStyle;
+import com.example.springpracticerestmvc.repositories.BeerOrderRepository;
 import com.example.springpracticerestmvc.repositories.BeerRepository;
 import com.example.springpracticerestmvc.repositories.CustomerRepository;
 import com.example.springpracticerestmvc.services.BeerCsvService;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -22,6 +26,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -30,6 +35,7 @@ public class BootstrapData implements CommandLineRunner {
 
     private final BeerRepository beerRepository;
     private final CustomerRepository customerRepository;
+    private final BeerOrderRepository beerOrderRepository;
     private final BeerCsvService beerCsvService;
 
     @Value("${bootstrap.csv-file-path}")
@@ -47,6 +53,55 @@ public class BootstrapData implements CommandLineRunner {
         loadBeerData();
         loadCsvData(beerCsvFilePath);
         loadCustomerData();
+        loadOrderData();
+    }
+
+    private void loadOrderData() {
+        if (beerOrderRepository.count() == 0) {
+            val customers = customerRepository.findAll();
+            val beers = beerRepository.findAll();
+            val beerIterator = beers.iterator();
+
+            customers.forEach(customer -> {
+                beerOrderRepository.save(
+                        BeerOrder.builder()
+                                .customer(customer)
+                                .beerOrderLines(
+                                        Set.of(
+                                                BeerOrderLine.builder()
+                                                        .beer(beerIterator.next())
+                                                        .orderQuantity(1)
+                                                        .build(),
+                                                BeerOrderLine.builder()
+                                                        .beer(beerIterator.next())
+                                                        .orderQuantity(2)
+                                                        .build()
+                                        )
+                                )
+                                .build()
+                );
+
+                beerOrderRepository.save(
+                        BeerOrder.builder()
+                                .customer(customer)
+                                .beerOrderLines(
+                                        Set.of(
+                                                BeerOrderLine.builder()
+                                                        .beer(beerIterator.next())
+                                                        .orderQuantity(3)
+                                                        .build(),
+                                                BeerOrderLine.builder()
+                                                        .beer(beerIterator.next())
+                                                        .orderQuantity(4)
+                                                        .build()
+                                        )
+                                )
+                                .build()
+                );
+            });
+
+            val orders = beerOrderRepository.findAll();
+        }
     }
 
     private void loadCsvData(String beerCsvFilePath) throws FileNotFoundException {

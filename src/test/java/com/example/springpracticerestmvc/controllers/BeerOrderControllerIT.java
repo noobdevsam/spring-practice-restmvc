@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-class BeerOrderControllerTestIt {
+class BeerOrderControllerIT {
 
     @Autowired
     WebApplicationContext wac;
@@ -55,6 +55,6 @@ class BeerOrderControllerTestIt {
                                 .with(jwtRequestPostProcessor)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)));
+                .andExpect(jsonPath("$.id", is(beerOrder.getId().toString())));
     }
 }

@@ -57,6 +57,7 @@ public class BeerOrderServiceImpl implements BeerOrderService {
     }
 
     @Override
+    @Transactional
     public BeerOrder createOrder(BeerOrderCreateDTO beerOrderCreateDTO) {
 
         var customer = customerRepository.findById(beerOrderCreateDTO.getCustomerId())

@@ -55,6 +55,6 @@ class BeerOrderControllerTestIt {
                                 .with(jwtRequestPostProcessor)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)));
+                .andExpect(jsonPath("$.id", is(beerOrder.getId().toString())));
     }
 }

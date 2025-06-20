@@ -3,6 +3,7 @@ package com.example.springpracticerestmvc.controllers;
 import com.example.springpracticerestmvc.exceptions.NotFoundException;
 import com.example.springpracticerestmvc.model.BeerOrderCreateDTO;
 import com.example.springpracticerestmvc.model.BeerOrderDTO;
+import com.example.springpracticerestmvc.model.BeerOrderUpdateDTO;
 import com.example.springpracticerestmvc.services.BeerOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,6 +48,16 @@ public class BeerOrderController {
         return ResponseEntity.created(
                 URI.create(BEER_ORDER_PATH + "/" + savedOrder.getId().toString())
         ).build();
+    }
+
+    @PutMapping(BEER_ORDER_PATH_ID)
+    public ResponseEntity<BeerOrderDTO> updateOrder(
+            @PathVariable UUID beerOrderId,
+            @RequestBody BeerOrderUpdateDTO beerOrderUpdateDTO
+    ) {
+        return ResponseEntity.ok(
+                beerOrderService.updateOrder(beerOrderId, beerOrderUpdateDTO)
+        );
     }
 
 }

@@ -2,10 +2,12 @@ package com.example.springpracticerestmvc.services.impl;
 
 import com.example.springpracticerestmvc.entities.BeerOrder;
 import com.example.springpracticerestmvc.entities.BeerOrderLine;
+import com.example.springpracticerestmvc.entities.BeerOrderShipment;
 import com.example.springpracticerestmvc.exceptions.NotFoundException;
 import com.example.springpracticerestmvc.mappers.BeerOrderMapper;
 import com.example.springpracticerestmvc.model.BeerOrderCreateDTO;
 import com.example.springpracticerestmvc.model.BeerOrderDTO;
+import com.example.springpracticerestmvc.model.BeerOrderUpdateDTO;
 import com.example.springpracticerestmvc.repositories.BeerOrderRepository;
 import com.example.springpracticerestmvc.repositories.BeerRepository;
 import com.example.springpracticerestmvc.repositories.CustomerRepository;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -82,6 +85,77 @@ public class BeerOrderServiceImpl implements BeerOrderService {
                         .beerOrderLines(beerOrderLines)
                         .customerRef(beerOrderCreateDTO.getCustomerRef())
                         .build()
+        );
+    }
+
+    @Transactional
+    @Override
+    public BeerOrderDTO updateOrder(UUID beerOrderId, BeerOrderUpdateDTO beerOrderUpdateDTO) {
+
+        var order = beerOrderRepository.findById(beerOrderId)
+                .orElseThrow(NotFoundException::new);
+
+        order.setCustomer(
+                customerRepository.findById(
+                        beerOrderUpdateDTO.getCustomerId()
+                ).orElseThrow(
+                        NotFoundException::new
+                )
+        );
+        order.setCustomerRef(beerOrderUpdateDTO.getCustomerRef());
+
+        beerOrderUpdateDTO.getBeerOrderLines().forEach(beerOrderLine -> {
+
+            if (beerOrderLine.getBeerId() != null) {
+
+                var foundLine = order.getBeerOrderLines().stream()
+                        .filter(
+                                line1 -> line1.getId().equals(beerOrderLine.getId())
+                        )
+                        .findFirst()
+                        .orElseThrow(NotFoundException::new);
+
+                foundLine.setBeer(
+                        beerRepository.findById(beerOrderLine.getBeerId())
+                                .orElseThrow(NotFoundException::new)
+                );
+                foundLine.setOrderQuantity(
+                        beerOrderLine.getOrderQuantity()
+                );
+                foundLine.setQuantityAllocated(
+                        beerOrderLine.getQuantityAllocated()
+                );
+
+            } else {
+
+                order.getBeerOrderLines().add(
+                        BeerOrderLine.builder()
+                                .beer(
+                                        beerRepository.findById(beerOrderLine.getBeerId())
+                                                .orElseThrow(NotFoundException::new)
+                                )
+                                .orderQuantity(beerOrderLine.getOrderQuantity())
+                                .quantityAllocated(beerOrderLine.getQuantityAllocated())
+                                .build()
+                );
+            }
+        });
+
+        if (
+                beerOrderUpdateDTO.getBeerOrderShipment() != null &&
+                        beerOrderUpdateDTO.getBeerOrderShipment().getTrackingNumber() != null
+        ) {
+            if (order.getBeerOrderShipment() == null) {
+                order.setBeerOrderShipment(
+                        BeerOrderShipment.builder()
+                                .trackingNumber(beerOrderUpdateDTO.getBeerOrderShipment().getTrackingNumber())
+                                .build()
+                );
+            }
+        }
+
+        return beerOrderMapper.beerOrderToBeerOrderDTO(
+                beerOrderRepository.save(order)
         );
     }
 }

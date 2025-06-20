@@ -3,6 +3,7 @@ package com.example.springpracticerestmvc.services;
 import com.example.springpracticerestmvc.entities.BeerOrder;
 import com.example.springpracticerestmvc.model.BeerOrderCreateDTO;
 import com.example.springpracticerestmvc.model.BeerOrderDTO;
+import com.example.springpracticerestmvc.model.BeerOrderUpdateDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.Optional;
@@ -15,4 +16,6 @@ public interface BeerOrderService {
     Page<BeerOrderDTO> listOrders(Integer pageNumber, Integer pageSize);
 
     BeerOrder createOrder(BeerOrderCreateDTO beerOrderCreateDTO);
+
+    BeerOrderDTO updateOrder(UUID beerOrderId, BeerOrderUpdateDTO beerOrderUpdateDTO);
 }

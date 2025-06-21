@@ -1,6 +1,7 @@
 package com.example.springpracticerestmvc.controllers;
 
 import com.example.springpracticerestmvc.config.SecConfig;
+import com.example.springpracticerestmvc.entities.Beer;
 import com.example.springpracticerestmvc.events.BeerCreatedEvent;
 import com.example.springpracticerestmvc.events.BeerDeletedEvent;
 import com.example.springpracticerestmvc.events.BeerPatchedEvent;
@@ -9,6 +10,7 @@ import com.example.springpracticerestmvc.exceptions.NotFoundException;
 import com.example.springpracticerestmvc.mappers.BeerMapper;
 import com.example.springpracticerestmvc.model.BeerDTO;
 import com.example.springpracticerestmvc.model.BeerStyle;
+import com.example.springpracticerestmvc.repositories.BeerOrderRepository;
 import com.example.springpracticerestmvc.repositories.BeerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.core.IsNull;
@@ -60,6 +62,9 @@ class BeerControllerIT {
     BeerRepository beerRepository;
 
     @Autowired
+    BeerOrderRepository beerOrderRepository;
+
+    @Autowired
     BeerMapper beerMapper;
 
     @Autowired
@@ -88,6 +93,7 @@ class BeerControllerIT {
     @Transactional
     @Rollback
     void test_empty_list() {
+        beerOrderRepository.deleteAll();
         beerRepository.deleteAll();
         var dtos = beerController.listBeers(null, null, false, 1, 25);
 
@@ -233,7 +239,14 @@ class BeerControllerIT {
 
     @Test
     void test_delete_by_id_found() {
-        var beer = beerRepository.findAll().getFirst();
+        var beer = beerRepository.save(
+                Beer.builder()
+                        .beerName("Beer to delete")
+                        .beerStyle(BeerStyle.IPA)
+                        .upc("123456789012")
+                        .price(new BigDecimal("9.99"))
+                        .build()
+        );
         var responseEntity = beerController.deleteById(beer.getId());
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
@@ -374,6 +387,7 @@ class BeerControllerIT {
 
     @Test
     void test_delete_beer_id_found() throws Exception {
+        beerOrderRepository.deleteAll();
         var beer = beerRepository.findAll().getFirst();
 
         mockMvc.perform(

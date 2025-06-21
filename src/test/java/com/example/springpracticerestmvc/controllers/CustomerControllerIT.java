@@ -5,6 +5,7 @@ import com.example.springpracticerestmvc.config.SecConfig;
 import com.example.springpracticerestmvc.exceptions.NotFoundException;
 import com.example.springpracticerestmvc.mappers.CustomerMapper;
 import com.example.springpracticerestmvc.model.CustomerDTO;
+import com.example.springpracticerestmvc.repositories.BeerOrderRepository;
 import com.example.springpracticerestmvc.repositories.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ class CustomerControllerIT {
 
     @Autowired
     CustomerRepository customerRepository;
+
+    @Autowired
+    BeerOrderRepository beerOrderRepository;
 
     @Autowired
     CustomerMapper customerMapper;
@@ -59,6 +63,7 @@ class CustomerControllerIT {
     @Transactional
     @Rollback
     void test_finds_empty_list() {
+        beerOrderRepository.deleteAll();
         customerRepository.deleteAll();
         var dtos = customerController.listAllCustomers();
 
@@ -113,6 +118,7 @@ class CustomerControllerIT {
 
     @Test
     void test_delete_by_id_found() {
+        beerOrderRepository.deleteAll();
         var customer = customerRepository.findAll().getFirst();
         var responseEntity = customerController.deleteCustomerId(customer.getId());
 

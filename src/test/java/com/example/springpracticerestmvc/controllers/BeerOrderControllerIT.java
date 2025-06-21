@@ -21,6 +21,7 @@ import java.util.Set;
 import static com.example.springpracticerestmvc.controllers.BeerControllerTest.jwtRequestPostProcessor;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -138,6 +139,26 @@ class BeerOrderControllerIT {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.customerRef", is("TestRef")));
+    }
+
+    @Test
+    void test_delete_beer_order() throws Exception {
+        var beerOrder = beerOrderRepository.findAll().getFirst();
+
+        mockMvc.perform(
+                        delete(BeerOrderController.BEER_ORDER_PATH_ID, beerOrder.getId())
+                                .with(jwtRequestPostProcessor)
+                )
+                .andExpect(status().isOk());
+
+        assertTrue(beerOrderRepository.findById(beerOrder.getId()).isEmpty());
+
+        // Verify that the order is deleted
+        mockMvc.perform(
+                        get(BeerOrderController.BEER_ORDER_PATH_ID, beerOrder.getId())
+                                .with(jwtRequestPostProcessor)
+                )
+                .andExpect(status().isNotFound());
     }
 
 }

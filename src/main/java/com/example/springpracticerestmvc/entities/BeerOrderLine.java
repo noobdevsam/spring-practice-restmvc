@@ -1,5 +1,6 @@
 package com.example.springpracticerestmvc.entities;
 
+import com.example.springpracticerestmvc.model.BeerOrderLineStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
@@ -46,8 +47,8 @@ public class BeerOrderLine {
 
     private Integer quantityAllocated = 0;
 
-    public boolean isNew() {
-        return this.id == null;
-    }
+    @Builder.Default // Default value for orderLineStatus is NEW
+    @Enumerated(EnumType.STRING) // Store the enum as a string in the database
+    private BeerOrderLineStatus orderLineStatus = BeerOrderLineStatus.NEW;
 
 }

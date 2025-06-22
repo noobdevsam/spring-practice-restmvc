@@ -10,6 +10,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,6 +44,8 @@ public class BeerOrder {
     @ManyToOne
     private Customer customer;
 
+    private BigDecimal paymentAmount;
+
     @OneToMany(mappedBy = "beerOrder", cascade = CascadeType.ALL)
     private Set<BeerOrderLine> beerOrderLines = new HashSet<>();
 
@@ -55,6 +58,7 @@ public class BeerOrder {
                      Timestamp lastModifiedDate,
                      String customerRef,
                      Customer customer,
+                     BigDecimal paymentAmount,
                      Set<BeerOrderLine> beerOrderLines,
                      BeerOrderShipment beerOrderShipment) {
         this.id = id;
@@ -63,6 +67,7 @@ public class BeerOrder {
         this.lastModifiedDate = lastModifiedDate;
         this.customerRef = customerRef;
         this.setCustomer(customer);
+        this.setPaymentAmount(paymentAmount);
         this.setBeerOrderLines(beerOrderLines);
         this.setBeerOrderShipment(beerOrderShipment);
     }

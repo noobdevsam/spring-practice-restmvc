@@ -12,7 +12,7 @@ spring:
     datasource:
         username: ${MYSQL_USER:restadmin}
         password: ${MYSQL_PASS:password}
-        url: ${MYSQL_URL:jdbc:mysql://${DB_HOST_ADDRESS:localhost}:3306/restdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC}
+        url: jdbc:mysql://${DB_HOST_ADDRESS:localhost}:3306/restdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
         hikari:
             pool-name: RestDB-Pool
             maximum-pool-size: 5

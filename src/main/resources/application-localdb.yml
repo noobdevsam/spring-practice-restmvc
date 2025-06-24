@@ -10,9 +10,9 @@ spring:
         enabled: true
 
     datasource:
-        username: restadmin
-        password: password
-        url: jdbc:mysql://localhost:3306/restdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+        username: ${MYSQL_USER:restadmin}
+        password: ${MYSQL_PASS:password}
+        url: jdbc:mysql://${DB_HOST_ADDRESS:localhost}:3306/restdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
         hikari:
             pool-name: RestDB-Pool
             maximum-pool-size: 5
@@ -38,3 +38,8 @@ logging:
                 orm:
                     jdbc:
                         bind: trace
+
+
+
+# Command for docker container creation and running
+# docker run --name spring-practice-restmvc -d -e DB_HOST_ADDRESS=host.docker.internal -p 8081:8081 spring-practice-restmvc:0.0.1-SNAPSHOT --spring.profiles.active=localdb

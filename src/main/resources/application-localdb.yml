@@ -38,3 +38,8 @@ logging:
                 orm:
                     jdbc:
                         bind: trace
+
+
+
+# Command for docker container creation and running
+# docker run --name spring-practice-restmvc -d -e DB_HOST_ADDRESS=host.docker.internal -p 8081:8081 spring-practice-restmvc:0.0.1-SNAPSHOT --spring.profiles.active=localdb

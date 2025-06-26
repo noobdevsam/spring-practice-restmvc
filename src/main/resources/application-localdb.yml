@@ -41,5 +41,8 @@ logging:
 
 
 
-# Command for docker container creation and running
-# docker run --name spring-practice-restmvc -d -e DB_HOST_ADDRESS=host.docker.internal -p 8081:8081 spring-practice-restmvc:0.0.1-SNAPSHOT --spring.profiles.active=localdb
+# 1. Command for docker container creation and running
+#       docker run --name spring-practice-restmvc -d -e DB_HOST_ADDRESS=host.docker.internal -p 8081:8081 spring-practice-restmvc:0.0.1-SNAPSHOT --spring.profiles.active=localdb
+
+# 2. Set and link (spring-practice-restmvc) with the jwt-issuer-host container
+#       docker run --name spring-practice-restmvc -d -e DB_HOST_ADDRESS=host.docker.internal -e SERVER_PORT=8080 -p 8081:8080 --link spring-practice-auth-server:spring-practice-auth-server -e SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://spring-practice-auth-server:9000 spring-practice-restmvc:0.0.1-SNAPSHOT --spring.profiles.active=localdb

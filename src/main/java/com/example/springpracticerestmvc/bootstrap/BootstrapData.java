@@ -28,6 +28,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * BootstrapData is a Spring Boot component that initializes the database with sample data.
+ * It implements CommandLineRunner to execute code at application startup.
+ */
 @Component
 @RequiredArgsConstructor
 @Profile({"localdb", "default"})
@@ -41,11 +45,15 @@ public class BootstrapData implements CommandLineRunner {
     @Value("${bootstrap.csv-file-path}")
     String beerCsvFilePath;
 
+    /**
+     * Executes the database initialization logic at application startup.
+     *
+     * @param args Command-line arguments passed to the application.
+     * @throws Exception if an error occurs during initialization.
+     */
     @Transactional
     @Override
     public void run(String... args) throws Exception {
-
-//        assert beerCsvFilePath != null;
         if (beerCsvFilePath == null) {
             beerCsvFilePath = "classpath:csvdata/beers.csv";
         }
@@ -56,6 +64,10 @@ public class BootstrapData implements CommandLineRunner {
         loadOrderData();
     }
 
+    /**
+     * Loads sample beer order data into the database.
+     * Creates orders for each customer using available beers.
+     */
     private void loadOrderData() {
         if (beerOrderRepository.count() == 0) {
             val customers = customerRepository.findAll();
@@ -100,12 +112,17 @@ public class BootstrapData implements CommandLineRunner {
                 );
             });
 
-            val orders = beerOrderRepository.findAll();
+            beerOrderRepository.findAll(); // Trigger loading of orders into the context
         }
     }
 
+    /**
+     * Loads beer data from a CSV file into the database.
+     *
+     * @param beerCsvFilePath Path to the CSV file containing beer data.
+     * @throws FileNotFoundException if the CSV file is not found.
+     */
     private void loadCsvData(String beerCsvFilePath) throws FileNotFoundException {
-
         if (beerRepository.count() < 10) {
             File file = ResourceUtils.getFile(beerCsvFilePath);
             List<BeerCSVRecord> csvRecords = beerCsvService.convertCSV(file);
@@ -134,9 +151,12 @@ public class BootstrapData implements CommandLineRunner {
                         .build());
             });
         }
-
     }
 
+    /**
+     * Loads sample customer data into the database.
+     * Creates three customers with predefined names and timestamps.
+     */
     private void loadCustomerData() {
         if (customerRepository.count() == 0) {
             var customer1 = Customer.builder()
@@ -161,6 +181,10 @@ public class BootstrapData implements CommandLineRunner {
         }
     }
 
+    /**
+     * Loads predefined beer data into the database.
+     * Adds three beers with specific attributes.
+     */
     private void loadBeerData() {
         if (beerRepository.count() == 0) {
             beerRepository.save(
@@ -198,9 +222,6 @@ public class BootstrapData implements CommandLineRunner {
                             .updateDate(LocalDateTime.now())
                             .build()
             );
-
         }
     }
-
-
 }

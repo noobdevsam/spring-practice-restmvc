@@ -23,6 +23,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Implementation of the BeerOrderService interface for managing beer orders.
+ * Provides methods for CRUD operations on beer orders.
+ */
 @Service
 @RequiredArgsConstructor
 public class BeerOrderServiceImpl implements BeerOrderService {
@@ -32,6 +36,12 @@ public class BeerOrderServiceImpl implements BeerOrderService {
     private final BeerRepository beerRepository;
     private final BeerOrderMapper beerOrderMapper;
 
+    /**
+     * Retrieves a beer order by its ID.
+     *
+     * @param beerOrderId The UUID of the beer order.
+     * @return An Optional containing the BeerOrderDTO if found, or empty if not found.
+     */
     @Override
     public Optional<BeerOrderDTO> getById(UUID beerOrderId) {
         return Optional.ofNullable(
@@ -41,6 +51,13 @@ public class BeerOrderServiceImpl implements BeerOrderService {
         );
     }
 
+    /**
+     * Lists beer orders with pagination.
+     *
+     * @param pageNumber The page number to retrieve (0-based).
+     * @param pageSize   The number of items per page.
+     * @return A Page of BeerOrderDTO objects.
+     */
     @Override
     public Page<BeerOrderDTO> listOrders(Integer pageNumber, Integer pageSize) {
 
@@ -59,6 +76,12 @@ public class BeerOrderServiceImpl implements BeerOrderService {
                 .map(beerOrderMapper::beerOrderToBeerOrderDTO);
     }
 
+    /**
+     * Creates a new beer order.
+     *
+     * @param beerOrderCreateDTO The DTO containing details for the new beer order.
+     * @return The created BeerOrder entity.
+     */
     @Override
     @Transactional
     public BeerOrder createOrder(BeerOrderCreateDTO beerOrderCreateDTO) {
@@ -88,6 +111,13 @@ public class BeerOrderServiceImpl implements BeerOrderService {
         );
     }
 
+    /**
+     * Updates an existing beer order.
+     *
+     * @param beerOrderId        The UUID of the beer order to update.
+     * @param beerOrderUpdateDTO The DTO containing updated details for the beer order.
+     * @return The updated BeerOrderDTO.
+     */
     @Transactional
     @Override
     public BeerOrderDTO updateOrder(UUID beerOrderId, BeerOrderUpdateDTO beerOrderUpdateDTO) {
@@ -159,6 +189,12 @@ public class BeerOrderServiceImpl implements BeerOrderService {
         );
     }
 
+    /**
+     * Deletes a beer order by its ID.
+     *
+     * @param beerOrderId The UUID of the beer order to delete.
+     * @throws NotFoundException If the beer order does not exist.
+     */
     @Override
     public void deleteOrder(UUID beerOrderId) {
 

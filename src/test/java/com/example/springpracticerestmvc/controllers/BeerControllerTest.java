@@ -33,11 +33,17 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
+/**
+ * Unit tests for the BeerController class.
+ * This class uses Spring's WebMvcTest to test the BeerController endpoints.
+ */
 @WebMvcTest(BeerController.class)
 @Import(SecConfig.class)
 class BeerControllerTest {
 
+    /**
+     * JWT request post-processor for authentication in tests.
+     */
     public static final SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor jwtRequestPostProcessor =
             jwt()
                     .jwt(jwt -> {
@@ -48,41 +54,43 @@ class BeerControllerTest {
                     });
 
     @Autowired
-    MockMvc mockMvc;
+    MockMvc mockMvc; // MockMvc for simulating HTTP requests in tests.
 
     @MockitoBean
-    BeerService beerService;
+    BeerService beerService; // Mocked BeerService for dependency injection.
 
-    BeerServiceImpl beerServiceImpl;
+    BeerServiceImpl beerServiceImpl; // Actual implementation of BeerService for test data.
 
     @Autowired
-    ObjectMapper objectMapper;
-    // for serializing-deserializing json object to pojo and vice versa
+    ObjectMapper objectMapper; // ObjectMapper for JSON serialization/deserialization.
 
     @Captor
-    ArgumentCaptor<UUID> uuidArgumentCaptor;
+    ArgumentCaptor<UUID> uuidArgumentCaptor; // Captor for UUID arguments.
 
     @Captor
-    ArgumentCaptor<BeerDTO> beerArgumentCaptor;
+    ArgumentCaptor<BeerDTO> beerArgumentCaptor; // Captor for BeerDTO arguments.
 
+    /**
+     * Setup method to initialize test data before each test.
+     */
     @BeforeEach
     void setUp() {
         beerServiceImpl = new BeerServiceImpl();
     }
 
+    /**
+     * Test for retrieving a beer by its ID.
+     * Verifies the response contains the correct beer details.
+     */
     @Test
     void getBeerById() throws Exception {
-
         var beer = beerServiceImpl.listBeers(null, null, false, 1, 25)
                 .getContent().getFirst();
 
-        //given(beerService.getBeerById(any(UUID.class))).willReturn(beer);
         given(beerService.getBeerById(beer.getId())).willReturn(
                 Optional.of(beer)
         );
 
-        // using json path matcher to access json object
-        // such as $.id or $.beerName
         mockMvc.perform(get(BeerController.BEER_PATH_ID, beer.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .with(jwtRequestPostProcessor) // for authentication
@@ -93,6 +101,10 @@ class BeerControllerTest {
                 .andExpect(jsonPath("$.beerName", is(beer.getBeerName())));
     }
 
+    /**
+     * Test for listing beers.
+     * Verifies the response contains the correct number of beers.
+     */
     @Test
     void test_list_beers() throws Exception {
         given(beerService.listBeers(any(), any(), any(), any(), any()))
@@ -107,11 +119,14 @@ class BeerControllerTest {
                 .andExpect(jsonPath("$.content.length()", is(3)));
     }
 
+    /**
+     * Test for creating a new beer.
+     * Verifies the response contains a "Location" header.
+     */
     @Test
     void test_create_new_beer() throws Exception {
         var beer = beerServiceImpl.listBeers(null, null, false, 1, 25)
                 .getContent().getFirst();
-        //beer.setId(null);
         beer.setVersion(null);
 
         given(beerService.saveNewBeer(any(BeerDTO.class)))
@@ -126,12 +141,12 @@ class BeerControllerTest {
                                 .content(objectMapper.writeValueAsString(beer))
                 ).andExpect(status().isCreated())
                 .andExpect(header().exists("Location"));
-
-        // writing to json
-        //System.out.println(objectMapper.writeValueAsString(beer));
-
     }
 
+    /**
+     * Test for updating a beer by its ID.
+     * Verifies the response status is "No Content".
+     */
     @Test
     void test_update_beer() throws Exception {
         var beer = beerServiceImpl.listBeers(null, null, false, 1, 25)
@@ -149,6 +164,10 @@ class BeerControllerTest {
         verify(beerService).updateBeerById(any(UUID.class), any(BeerDTO.class));
     }
 
+    /**
+     * Test for deleting a beer by its ID.
+     * Verifies the response status is "No Content".
+     */
     @Test
     void test_delete_beer() throws Exception {
         var beer = beerServiceImpl.listBeers(null, null, false, 1, 25)
@@ -164,9 +183,12 @@ class BeerControllerTest {
 
         verify(beerService).deleteById(uuidArgumentCaptor.capture());
         assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
-
     }
 
+    /**
+     * Test for patching a beer by its ID.
+     * Verifies the response status is "No Content".
+     */
     @Test
     void test_patch_beer() throws Exception {
         var beer = beerServiceImpl.listBeers(null, null, false, 1, 25)
@@ -188,6 +210,10 @@ class BeerControllerTest {
         assertThat(beerMap.get("beerName")).isEqualTo(beerArgumentCaptor.getValue().getBeerName());
     }
 
+    /**
+     * Test for retrieving a beer by its ID when the beer is not found.
+     * Verifies the response status is "Not Found".
+     */
     @Test
     void test_get_beer_by_id_not_found() throws Exception {
         given(beerService.getBeerById(any(UUID.class)))
@@ -198,6 +224,10 @@ class BeerControllerTest {
         ).andExpect(status().isNotFound());
     }
 
+    /**
+     * Test for creating a beer with a null beerName.
+     * Verifies the response status is "Bad Request".
+     */
     @Test
     void test_create_beer_null_beerName() throws Exception {
         var beerDTO = new BeerDTO();
@@ -220,6 +250,10 @@ class BeerControllerTest {
         System.out.println(mvcResult.getResponse().getContentAsString());
     }
 
+    /**
+     * Test for updating a beer with a blank beerName.
+     * Verifies the response status is "Bad Request".
+     */
     @Test
     void test_update_beer_blank_name() throws Exception {
         BeerDTO beer = beerServiceImpl.listBeers(null, null, false, 1, 25)
@@ -241,5 +275,4 @@ class BeerControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.length()", is(1)));
     }
-
 }

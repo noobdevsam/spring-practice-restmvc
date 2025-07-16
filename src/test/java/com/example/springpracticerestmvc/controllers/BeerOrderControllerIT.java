@@ -26,26 +26,33 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Integration tests for the BeerOrderController.
+ * This class tests the BeerOrderController endpoints using MockMvc.
+ */
 @SpringBootTest
 class BeerOrderControllerIT {
 
     @Autowired
-    WebApplicationContext wac;
+    WebApplicationContext wac; // Web application context for setting up MockMvc.
 
     @Autowired
-    BeerOrderRepository beerOrderRepository;
+    BeerOrderRepository beerOrderRepository; // Repository for BeerOrder entities.
 
     @Autowired
-    CustomerRepository customerRepository;
+    CustomerRepository customerRepository; // Repository for Customer entities.
 
     @Autowired
-    BeerRepository beerRepository;
+    BeerRepository beerRepository; // Repository for Beer entities.
 
     @Autowired
-    ObjectMapper objectMapper;
+    ObjectMapper objectMapper; // ObjectMapper for JSON serialization/deserialization.
 
-    MockMvc mockMvc;
+    MockMvc mockMvc; // MockMvc instance for testing HTTP requests.
 
+    /**
+     * Sets up the MockMvc instance with Spring Security before each test.
+     */
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
@@ -53,6 +60,12 @@ class BeerOrderControllerIT {
                 .build();
     }
 
+    /**
+     * Tests the endpoint for listing beer orders.
+     * Verifies that the response contains a list of beer orders.
+     *
+     * @throws Exception if the request fails.
+     */
     @Test
     void test_list_beer_orders() throws Exception {
         mockMvc.perform(
@@ -63,9 +76,14 @@ class BeerOrderControllerIT {
                 .andExpect(jsonPath("$.content.size()", greaterThan(0)));
     }
 
+    /**
+     * Tests the endpoint for retrieving a beer order by its ID.
+     * Verifies that the response contains the correct beer order details.
+     *
+     * @throws Exception if the request fails.
+     */
     @Test
     void test_get_beer_order_by_id() throws Exception {
-
         var beerOrder = beerOrderRepository.findAll().getFirst();
 
         mockMvc.perform(
@@ -76,6 +94,12 @@ class BeerOrderControllerIT {
                 .andExpect(jsonPath("$.id", is(beerOrder.getId().toString())));
     }
 
+    /**
+     * Tests the endpoint for creating a new beer order.
+     * Verifies that the response status is 201 Created and the Location header is present.
+     *
+     * @throws Exception if the request fails.
+     */
     @Test
     void test_create_beer_order() throws Exception {
         var customer = customerRepository.findAll().getFirst();
@@ -103,6 +127,12 @@ class BeerOrderControllerIT {
                 .andExpect(header().exists("Location"));
     }
 
+    /**
+     * Tests the endpoint for updating an existing beer order.
+     * Verifies that the response contains the updated beer order details.
+     *
+     * @throws Exception if the request fails.
+     */
     @Transactional
     @Test
     void test_update_beer_order() throws Exception {
@@ -141,6 +171,12 @@ class BeerOrderControllerIT {
                 .andExpect(jsonPath("$.customerRef", is("TestRef")));
     }
 
+    /**
+     * Tests the endpoint for deleting a beer order.
+     * Verifies that the beer order is deleted and cannot be retrieved afterward.
+     *
+     * @throws Exception if the request fails.
+     */
     @Test
     void test_delete_beer_order() throws Exception {
         var beerOrder = beerOrderRepository.findAll().getFirst();

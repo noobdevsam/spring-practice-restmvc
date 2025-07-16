@@ -29,33 +29,45 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Unit tests for the CustomerController class.
+ * This class tests the CustomerController endpoints using MockMvc and Mockito.
+ */
 @WebMvcTest(CustomerController.class)
 @Import(SecConfig.class)
 public class CustomerControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    MockMvc mockMvc; // MockMvc instance for testing HTTP requests.
 
     @MockitoBean
-    CustomerService customerService;
+    CustomerService customerService; // Mocked CustomerService for simulating service layer behavior.
 
     @Autowired
-    ObjectMapper objectMapper;
+    ObjectMapper objectMapper; // ObjectMapper for JSON serialization/deserialization.
 
     @Captor
-    ArgumentCaptor<UUID> uuidArgumentCaptor;
-    // Use it to capture argument values for further assertions.
+    ArgumentCaptor<UUID> uuidArgumentCaptor; // Captor for capturing UUID arguments in method calls.
 
     @Captor
-    ArgumentCaptor<CustomerDTO> customerArgumentCaptor;
+    ArgumentCaptor<CustomerDTO> customerArgumentCaptor; // Captor for capturing CustomerDTO arguments in method calls.
 
-    CustomerServiceImpl customerServiceImpl;
+    CustomerServiceImpl customerServiceImpl; // Implementation of CustomerService for testing purposes.
 
+    /**
+     * Sets up the test environment before each test.
+     */
     @BeforeEach
     void setUp() {
         customerServiceImpl = new CustomerServiceImpl();
     }
 
+    /**
+     * Tests the endpoint for retrieving a customer by its ID.
+     * Verifies that the response contains the correct customer details.
+     *
+     * @throws Exception if the request fails.
+     */
     @Test
     void test_get_by_id() throws Exception {
         var customer = customerServiceImpl.getAllCustomers().getFirst();
@@ -74,6 +86,12 @@ public class CustomerControllerTest {
                 .andExpect(jsonPath("$.name", is(customer.getName())));
     }
 
+    /**
+     * Tests the endpoint for listing all customers.
+     * Verifies that the response contains the expected number of customers.
+     *
+     * @throws Exception if the request fails.
+     */
     @Test
     void test_list_all_customers() throws Exception {
         given(customerService.getAllCustomers()).willReturn(customerServiceImpl.getAllCustomers());
@@ -88,6 +106,12 @@ public class CustomerControllerTest {
                 .andExpect(jsonPath("$.length()", is(3)));
     }
 
+    /**
+     * Tests the endpoint for creating a new customer.
+     * Verifies that the response status is 201 Created and the Location header is present.
+     *
+     * @throws Exception if the request fails.
+     */
     @Test
     void test_create_new_customer() throws Exception {
         var customer = customerServiceImpl.getAllCustomers().getFirst();
@@ -108,6 +132,12 @@ public class CustomerControllerTest {
                 .andExpect(header().exists("Location"));
     }
 
+    /**
+     * Tests the endpoint for updating an existing customer.
+     * Verifies that the response status is 204 No Content and the customer details are updated.
+     *
+     * @throws Exception if the request fails.
+     */
     @Test
     void test_update_customer() throws Exception {
         var customer = customerServiceImpl.getAllCustomers().getFirst();
@@ -134,6 +164,12 @@ public class CustomerControllerTest {
         assertThat(customer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
     }
 
+    /**
+     * Tests the endpoint for deleting a customer by its ID.
+     * Verifies that the response status is 204 No Content and the customer is deleted.
+     *
+     * @throws Exception if the request fails.
+     */
     @Test
     void test_delete_customer() throws Exception {
         var customer = customerServiceImpl.getAllCustomers().getFirst();
@@ -151,6 +187,12 @@ public class CustomerControllerTest {
         assertThat(customer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
     }
 
+    /**
+     * Tests the endpoint for partially updating a customer.
+     * Verifies that the response status is 204 No Content and the customer details are updated.
+     *
+     * @throws Exception if the request fails.
+     */
     @Test
     void test_patch_customer() throws Exception {
         var customer = customerServiceImpl.getAllCustomers().getFirst();
@@ -174,6 +216,12 @@ public class CustomerControllerTest {
         assertThat(customerMap.get("name")).isEqualTo(customerArgumentCaptor.getValue().getName());
     }
 
+    /**
+     * Tests the behavior when attempting to retrieve a customer by a non-existent ID.
+     * Verifies that the response status is 404 Not Found.
+     *
+     * @throws Exception if the request fails.
+     */
     @Test
     void test_getcustomerbyid_not_found() throws Exception {
 
@@ -186,17 +234,3 @@ public class CustomerControllerTest {
         ).andExpect(status().isNotFound());
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

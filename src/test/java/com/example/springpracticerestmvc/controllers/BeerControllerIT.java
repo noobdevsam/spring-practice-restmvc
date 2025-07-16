@@ -46,6 +46,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Integration tests for the BeerController class.
+ * This class tests various endpoints and functionalities of the BeerController.
+ */
 @SpringBootTest
 @ActiveProfiles("localdb")
 @Import(SecConfig.class)
@@ -75,6 +79,9 @@ class BeerControllerIT {
 
     MockMvc mockMvc;
 
+    /**
+     * Sets up the MockMvc instance with Spring Security before each test.
+     */
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
@@ -82,6 +89,10 @@ class BeerControllerIT {
                 .build();
     }
 
+    /**
+     * Tests listing beers with default parameters.
+     * Expects a large number of beers to be returned.
+     */
     @Test
     void test_list_beers() {
         var dtos = beerController.listBeers(null, null, false, 1, 2412);
@@ -89,6 +100,10 @@ class BeerControllerIT {
         assertThat(dtos.getContent().size()).isEqualTo(1000);
     }
 
+    /**
+     * Tests listing beers when the database is empty.
+     * Expects an empty list to be returned.
+     */
     @Test
     @Transactional
     @Rollback
@@ -100,6 +115,10 @@ class BeerControllerIT {
         assertThat(dtos.getContent().size()).isEqualTo(0);
     }
 
+    /**
+     * Tests listing beers filtered by name using MockMvc.
+     * Expects a specific number of beers to be returned.
+     */
     @Test
     void test_list_beers_by_name() throws Exception {
         mockMvc.perform(
@@ -112,6 +131,10 @@ class BeerControllerIT {
                 .andExpect(jsonPath("$.content.size()", is(320)));
     }
 
+    /**
+     * Tests listing beers filtered by style using MockMvc.
+     * Expects a specific number of beers to be returned.
+     */
     @Test
     void test_list_beers_by_style() throws Exception {
         mockMvc.perform(
@@ -124,6 +147,10 @@ class BeerControllerIT {
                 .andExpect(jsonPath("$.content.size()", is(556)));
     }
 
+    /**
+     * Tests listing beers filtered by both name and style using MockMvc.
+     * Expects a specific number of beers to be returned.
+     */
     @Test
     void test_list_beers_by_name_and_style() throws Exception {
         mockMvc.perform(
@@ -137,6 +164,10 @@ class BeerControllerIT {
                 .andExpect(jsonPath("$.content.size()", is(298)));
     }
 
+    /**
+     * Tests listing beers filtered by name and style with inventory hidden.
+     * Expects inventory data to be null.
+     */
     @Test
     void test_list_beers_by_name_and_style_show_inventory_false() throws Exception {
         mockMvc.perform(
@@ -152,6 +183,10 @@ class BeerControllerIT {
                 .andExpect(jsonPath("$.content[0].quantityOnHand").value(IsNull.nullValue()));
     }
 
+    /**
+     * Tests listing beers filtered by name and style with inventory shown.
+     * Expects inventory data to be present.
+     */
     @Test
     void test_list_beers_by_name_and_style_show_inventory_true() throws Exception {
         mockMvc.perform(
@@ -167,6 +202,10 @@ class BeerControllerIT {
                 .andExpect(jsonPath("$.content[0].quantityOnHand").value(IsNull.notNullValue()));
     }
 
+    /**
+     * Tests listing beers filtered by name and style with pagination.
+     * Expects a specific number of beers on the second page.
+     */
     @Test
     void test_list_beers_by_name_and_style_show_inventory_true_page_2() throws Exception {
         mockMvc.perform(
@@ -183,11 +222,19 @@ class BeerControllerIT {
                 .andExpect(jsonPath("$.content[0].quantityOnHand").value(IsNull.notNullValue()));
     }
 
+    /**
+     * Tests fetching a beer by ID when the beer does not exist.
+     * Expects a NotFoundException to be thrown.
+     */
     @Test
     void test_beer_not_found() {
         assertThrows(NotFoundException.class, () -> beerController.getBeerById(UUID.randomUUID()));
     }
 
+    /**
+     * Tests fetching a beer by ID when the beer exists.
+     * Expects the beer to be returned successfully.
+     */
     @Test
     void test_get_by_id() {
         var beer = beerRepository.findAll().getFirst();
@@ -196,6 +243,10 @@ class BeerControllerIT {
         assertThat(dto).isNotNull();
     }
 
+    /**
+     * Tests saving a new beer using the controller.
+     * Expects the beer to be saved and a 201 status code returned.
+     */
     @Test
     @Transactional
     @Rollback
@@ -215,6 +266,10 @@ class BeerControllerIT {
         assertThat(beer).isNotNull();
     }
 
+    /**
+     * Tests updating an existing beer using the controller.
+     * Expects the beer to be updated successfully.
+     */
     @Test
     void test_update_beer() {
         var beer = beerRepository.findAll().getFirst();
@@ -232,11 +287,19 @@ class BeerControllerIT {
         assertThat(updatedBeer.getBeerName()).isEqualTo(beerName);
     }
 
+    /**
+     * Tests updating a beer by ID when the beer does not exist.
+     * Expects a NotFoundException to be thrown.
+     */
     @Test
     void test_update_not_found() {
         assertThrows(NotFoundException.class, () -> beerController.updateBeerById(UUID.randomUUID(), new BeerDTO()));
     }
 
+    /**
+     * Tests deleting a beer by ID when the beer exists.
+     * Expects the beer to be deleted successfully.
+     */
     @Test
     void test_delete_by_id_found() {
         var beer = beerRepository.save(
@@ -253,11 +316,19 @@ class BeerControllerIT {
         assertThat(beerRepository.findById(beer.getId())).isEmpty();
     }
 
+    /**
+     * Tests deleting a beer by ID when the beer does not exist.
+     * Expects a NotFoundException to be thrown.
+     */
     @Test
     void test_delete_by_id_not_found() {
         assertThrows(NotFoundException.class, () -> beerController.deleteById(UUID.randomUUID()));
     }
 
+    /**
+     * Tests patching a beer with an invalid name using MockMvc.
+     * Expects a 400 Bad Request status code.
+     */
     @Test
     void test_patch_beer_bad_name() throws Exception {
         var beer = beerRepository.findAll().getFirst();
@@ -280,7 +351,10 @@ class BeerControllerIT {
         System.out.println(result.getResponse().getContentAsString());
     }
 
-    // transaction lock demo
+    /**
+     * Tests updating a beer with a bad version to simulate transaction lock.
+     * This test is disabled by default.
+     */
     @Disabled
     @Test
     void test_update_beer_bad_version() throws Exception {
@@ -317,6 +391,10 @@ class BeerControllerIT {
         System.out.println(result_second.getResponse().getStatus());
     }
 
+    /**
+     * Tests creating a new beer using MockMvc.
+     * Expects the beer to be created and a BeerCreatedEvent to be published.
+     */
     @Test
     void test_created_beer_mvc() throws Exception {
         var beerDTO = new BeerDTO();
@@ -341,6 +419,10 @@ class BeerControllerIT {
         );
     }
 
+    /**
+     * Tests updating a beer using MockMvc.
+     * Expects the beer to be updated and a BeerUpdatedEvent to be published.
+     */
     @Test
     void test_update_beer_mvc() throws Exception {
         var beer = beerRepository.findAll().getFirst();
@@ -363,6 +445,10 @@ class BeerControllerIT {
         );
     }
 
+    /**
+     * Tests patching a beer using MockMvc.
+     * Expects the beer to be patched and a BeerPatchedEvent to be published.
+     */
     @Test
     void test_patch_beer_mvc() throws Exception {
         var beer = beerRepository.findAll().getFirst();
@@ -385,6 +471,10 @@ class BeerControllerIT {
         );
     }
 
+    /**
+     * Tests deleting a beer by ID using MockMvc.
+     * Expects the beer to be deleted and a BeerDeletedEvent to be published.
+     */
     @Test
     void test_delete_beer_id_found() throws Exception {
         beerOrderRepository.deleteAll();
@@ -405,4 +495,3 @@ class BeerControllerIT {
     }
 
 }
-
